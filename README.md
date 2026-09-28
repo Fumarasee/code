@@ -52,11 +52,22 @@ The first photo is the card cover and profile portrait.
 
 Every profile shows a stylised low-poly husky built from that dog's colors. To show a real model:
 
-1. Put a `.glb` (or `.gltf`) file in `public/models/`, e.g. `public/models/loki.glb`.
-2. Set `model: 'models/loki.glb'` on the dog.
+1. Put an **`.stl`**, `.glb` or `.gltf` file in `public/models/`, e.g. `public/models/loki.stl`.
+2. Set `model: 'models/loki.stl'` on the dog.
 
-The viewer centres the model, scales it to fit, casts shadows and plays its first animation clip. If the model has
-clips whose names contain `wag` or `howl`, the toolbar buttons play them.
+The viewer centres the model on the snow, scales it to fit and casts shadows. Other behaviour depends on the format:
+
+- **STL** has no colors or materials. It's smoothed and given a clay finish tinted from the dog's coat. STL files are
+  usually Z-up (the 3D-printing convention), so the viewer stands them upright automatically.
+- **GLB/GLTF** keeps its own materials and plays its first animation clip. If there are clips whose names contain
+  `wag` or `howl`, the toolbar buttons play them.
+
+Fine-tune a model with `modelOptions`:
+
+```js
+model: 'models/loki.stl',
+modelOptions: { rotationY: 90, up: 'z', color: '#8a8f99', smooth: true },
+```
 
 ## Project structure
 

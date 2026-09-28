@@ -3,14 +3,17 @@
  *
  * - Builds a stylised low-poly husky from the dog's coat + eye colors, so every
  *   profile has a 3D model before real models exist.
- * - If `dog.model` points to a .glb/.gltf file, that model is loaded instead
- *   (auto-centred, scaled to fit and its first animation clip played).
+ * - If `dog.model` points to a .glb/.gltf or .stl file, that model is loaded
+ *   instead (auto-centred and scaled to fit; GLB animation clips play, STL
+ *   gets a clay material tinted from the coat). See `modelOptions` in dogs.js.
  * - Scene: aurora curtain shader, falling snow, glowing ground ring, orbiting
  *   aurora rim lights. The husky turns its head to follow the camera/cursor.
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { mix } from '../lib/color.js';
 
 const DEFAULT_POS = new THREE.Vector3(3.7, 2.2, 4.7);
@@ -346,44 +349,78 @@ export function createHuskyViewer(container, dog, { onStatus = () => {} } = {}) 
   );
   scene.add(snow);
 
-  // Model: procedural husky, optionally replaced by a real GLB
+  // Model: procedural husky, optionally replaced by a real model (.glb / .gltf / .stl)
   const husky = buildHusky(dog);
   scene.add(husky.root);
   let custom = null; // { root, mixer, clips }
+  const modelOptions = dog.modelOptions || {};
+
+  /**
+   * Centres a loaded model on the ground, scales it to the husky's size and
+   * swaps it in. Hierarchy: anim (wag/howl motion) → fit (scale/offset) →
+   * turn (modelOptions.rotationY) → model.
+   */
+  function useModel(model, clips = []) {
+    if (disposed) return;
+    const turn = new THREE.Group();
+    turn.rotation.y = THREE.MathUtils.degToRad(modelOptions.rotationY || 0);
+    turn.add(model);
+    const fit = new THREE.Group();
+    fit.add(turn);
+    const box = new THREE.Box3().setFromObject(fit);
+    const size = box.getSize(new THREE.Vector3());
+    fit.scale.setScalar(1.9 / Math.max(size.y, size.x * 0.8, size.z * 0.55));
+    box.setFromObject(fit);
+    const center = box.getCenter(new THREE.Vector3());
+    fit.position.set(-center.x, -box.min.y, -center.z);
+    const anim = new THREE.Group();
+    anim.add(fit);
+    anim.traverse((o) => {
+      if (o.isMesh) {
+        o.castShadow = true;
+        o.receiveShadow = true;
+      }
+    });
+    const mixer = new THREE.AnimationMixer(model);
+    if (clips[0]) mixer.clipAction(clips[0]).play();
+    custom = { root: anim, mixer, clips };
+    husky.root.visible = false;
+    scene.add(anim);
+    onStatus({ state: 'ready', custom: true });
+  }
+
+  /** STL has no materials: smooth it and give it a clay finish tinted from the coat. */
+  function stlToMesh(geometry) {
+    let geo = geometry;
+    if (modelOptions.smooth !== false) {
+      geo.deleteAttribute('normal');
+      geo = mergeVertices(geo);
+      geo.computeVertexNormals();
+    }
+    const material = new THREE.MeshStandardMaterial({
+      color: geometry.hasColors ? '#ffffff' : modelOptions.color || mix(dog.coat.primary, dog.coat.secondary, 0.45),
+      vertexColors: Boolean(geometry.hasColors),
+      roughness: 0.55,
+      metalness: 0.05,
+    });
+    const mesh = new THREE.Mesh(geo, material);
+    // STL files usually come from 3D-printing tools, which are Z-up
+    if ((modelOptions.up || 'z') === 'z') mesh.rotation.x = -Math.PI / 2;
+    return mesh;
+  }
 
   if (dog.model) {
     onStatus({ state: 'loading', message: 'Loading 3D model…' });
     const url = /^(https?:|\/)/.test(dog.model) ? dog.model : `${import.meta.env.BASE_URL}${dog.model}`;
-    new GLTFLoader().load(
-      url,
-      (gltf) => {
-        if (disposed) return;
-        const model = gltf.scene;
-        const box = new THREE.Box3().setFromObject(model);
-        const size = box.getSize(new THREE.Vector3());
-        const scale = 1.9 / Math.max(size.y, size.x * 0.8, size.z * 0.55);
-        model.scale.setScalar(scale);
-        box.setFromObject(model);
-        const center = box.getCenter(new THREE.Vector3());
-        model.position.x -= center.x;
-        model.position.z -= center.z;
-        model.position.y -= box.min.y;
-        model.traverse((o) => {
-          if (o.isMesh) {
-            o.castShadow = true;
-            o.receiveShadow = true;
-          }
-        });
-        const mixer = new THREE.AnimationMixer(model);
-        if (gltf.animations[0]) mixer.clipAction(gltf.animations[0]).play();
-        custom = { root: model, mixer, clips: gltf.animations };
-        husky.root.visible = false;
-        scene.add(model);
-        onStatus({ state: 'ready', custom: true });
-      },
-      undefined,
-      () => onStatus({ state: 'ready', custom: false, message: 'Could not load the model — showing the placeholder.' }),
-    );
+    const onError = (err) => {
+      console.error(`Could not load 3D model for ${dog.name}:`, err);
+      onStatus({ state: 'ready', custom: false, message: 'Could not load the model — showing the placeholder.' });
+    };
+    if (/\.stl(\?|#|$)/i.test(dog.model)) {
+      new STLLoader().load(url, (geometry) => useModel(stlToMesh(geometry)), undefined, onError);
+    } else {
+      new GLTFLoader().load(url, (gltf) => useModel(gltf.scene, gltf.animations), undefined, onError);
+    }
   } else {
     onStatus({ state: 'ready', custom: false });
   }

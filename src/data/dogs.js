@@ -10,8 +10,13 @@
  *   scene: aurora | forest | moon | snow | twilight | dawn
  *   mood:  calm | happy | howl | sleepy
  *
- * 3D model: set `model` to a .glb/.gltf path (e.g. `models/loki.glb` placed in
- * /public/models/) and the profile page loads it instead of the placeholder husky.
+ * 3D model: set `model` to a .stl, .glb or .gltf path (e.g. `models/loki.stl`
+ * placed in /public/models/) and the profile page loads it instead of the
+ * placeholder husky. Optional `modelOptions`:
+ *   up:        'z' (default for STL — 3D-printing convention) | 'y'
+ *   rotationY: degrees to turn the model so it faces the camera
+ *   color:     STL material color (default: a clay tone mixed from the coat)
+ *   smooth:    false to keep STL's faceted look (default: smoothed)
  */
 export const dogs = [
   {
