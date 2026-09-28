@@ -1,0 +1,144 @@
+/* Fixed northern-lights background: blurred drifting bands + star canvas. */
+.aurora {
+  --px: 0;
+  --py: 0;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 70% at 50% -10%, #0e1d44 0%, #070d24 45%, transparent 75%),
+    radial-gradient(ellipse 80% 60% at 100% 100%, rgba(40, 18, 72, 0.55), transparent 70%),
+    var(--bg-0);
+}
+
+.aurora__stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.aurora__band {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  will-change: transform;
+  transition: translate 1.4s var(--ease-out);
+}
+
+.aurora__band--1 {
+  width: 78vw;
+  height: 34vh;
+  left: -12vw;
+  top: -4vh;
+  background: linear-gradient(100deg, transparent 5%, #3cf2a4 32%, #2de2d0 55%, transparent 90%);
+  filter: blur(70px);
+  opacity: 0.5;
+  translate: calc(var(--px) * -36px) calc(var(--py) * -22px);
+  animation: band-1 24s ease-in-out infinite alternate;
+}
+
+.aurora__band--2 {
+  width: 64vw;
+  height: 40vh;
+  right: -14vw;
+  top: -10vh;
+  background: linear-gradient(80deg, transparent 5%, #a86bff 40%, #ff6ec7 70%, transparent 95%);
+  filter: blur(80px);
+  opacity: 0.42;
+  translate: calc(var(--px) * 30px) calc(var(--py) * -18px);
+  animation: band-2 28s ease-in-out infinite alternate;
+}
+
+.aurora__band--3 {
+  width: 56vw;
+  height: 26vh;
+  left: 22vw;
+  top: 18vh;
+  background: linear-gradient(95deg, transparent, #34c6f4 45%, #3cf2a4 70%, transparent);
+  filter: blur(90px);
+  opacity: 0.28;
+  translate: calc(var(--px) * -20px) calc(var(--py) * 14px);
+  animation: band-3 32s ease-in-out infinite alternate;
+}
+
+/* Curtain with vertical rays for texture */
+.aurora__band--4 {
+  width: 90vw;
+  height: 46vh;
+  left: 4vw;
+  top: -12vh;
+  border-radius: 40% 60% 50% 50% / 30% 30% 70% 70%;
+  background:
+    linear-gradient(180deg, transparent 10%, rgba(60, 242, 164, 0.55) 62%, rgba(52, 198, 244, 0.25) 80%, transparent),
+    linear-gradient(90deg, transparent, rgba(168, 107, 255, 0.4) 70%, transparent);
+  -webkit-mask-image: repeating-linear-gradient(92deg, #000 0 3px, rgba(0, 0, 0, 0.35) 3px 11px, #000 11px 14px, rgba(0, 0, 0, 0.2) 14px 26px);
+  mask-image: repeating-linear-gradient(92deg, #000 0 3px, rgba(0, 0, 0, 0.35) 3px 11px, #000 11px 14px, rgba(0, 0, 0, 0.2) 14px 26px);
+  filter: blur(16px);
+  opacity: 0.3;
+  translate: calc(var(--px) * -50px) calc(var(--py) * -26px);
+  animation: band-4 20s ease-in-out infinite alternate;
+}
+
+.aurora__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Keep the lower part of the page calm and readable */
+.aurora::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 55vh;
+  background: linear-gradient(180deg, transparent, rgba(2, 4, 13, 0.7));
+}
+
+@keyframes band-1 {
+  0% {
+    transform: rotate(-8deg) scaleX(1);
+  }
+  50% {
+    transform: rotate(-3deg) scaleX(1.18) translateX(6vw);
+  }
+  100% {
+    transform: rotate(-11deg) scaleX(0.94) translate(-3vw, 4vh);
+  }
+}
+
+@keyframes band-2 {
+  0% {
+    transform: rotate(10deg) scale(1);
+  }
+  50% {
+    transform: rotate(4deg) scale(1.12, 0.9) translateX(-8vw);
+  }
+  100% {
+    transform: rotate(14deg) scale(0.95, 1.1) translateY(5vh);
+  }
+}
+
+@keyframes band-3 {
+  0% {
+    transform: rotate(-4deg) translateX(-6vw);
+  }
+  100% {
+    transform: rotate(6deg) translateX(8vw) scaleX(1.2);
+  }
+}
+
+@keyframes band-4 {
+  0% {
+    transform: skewX(-8deg) translateX(-4vw) scaleY(0.95);
+  }
+  50% {
+    transform: skewX(4deg) translateX(3vw) scaleY(1.08);
+  }
+  100% {
+    transform: skewX(-2deg) translateX(6vw) scaleY(1);
+  }
+}
