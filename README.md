@@ -6,6 +6,9 @@ background.
 
 ## Run it
 
+You'll need **Node.js 18.18 or newer**; the current LTS from [nodejs.org](https://nodejs.org) is best. Check your
+version with `node --version`. On an older Node the scripts stop and tell you to upgrade.
+
 ```bash
 npm install
 npm run dev       # dev server with hot reload (opens the browser)
