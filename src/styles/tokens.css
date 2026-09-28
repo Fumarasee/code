@@ -1,0 +1,59 @@
+:root {
+  color-scheme: dark;
+
+  /* Night sky */
+  --bg-0: #02040d;
+  --bg-1: #060b1e;
+  --bg-2: #0b1430;
+
+  /* Text */
+  --text-1: #eef4ff;
+  --text-2: rgba(222, 234, 255, 0.76);
+  --text-3: rgba(196, 212, 250, 0.54);
+
+  /* Northern lights */
+  --aurora-green: #3cf2a4;
+  --aurora-teal: #2de2d0;
+  --aurora-cyan: #34c6f4;
+  --aurora-violet: #a86bff;
+  --aurora-pink: #ff6ec7;
+  --grad-aurora: linear-gradient(110deg, #3cf2a4 0%, #34c6f4 38%, #a86bff 72%, #ff6ec7 100%);
+
+  /* Per-dog accents (overridden inline on cards / profiles) */
+  --accent-1: var(--aurora-green);
+  --accent-2: var(--aurora-violet);
+
+  /* Glass */
+  --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.022));
+  --glass-bg-strong: linear-gradient(145deg, rgba(24, 32, 62, 0.82), rgba(9, 13, 32, 0.78));
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border-hi: rgba(255, 255, 255, 0.24);
+  --glass-blur: 18px;
+  --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 60px -28px rgba(0, 0, 0, 0.8);
+
+  /* Shape */
+  --radius-xs: 8px;
+  --radius-s: 12px;
+  --radius-m: 18px;
+  --radius-l: 26px;
+  --radius-xl: 34px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Layout */
+  --container: 1240px;
+  --gutter: 48px;
+
+  /* Type */
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Sora', 'Inter', system-ui, sans-serif;
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
