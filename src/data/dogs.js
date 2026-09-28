@@ -7,6 +7,8 @@
  * `photos/loki/01.jpg` placed in /public/photos/loki/). Entries without `src`
  * are rendered as generated illustrations using the dog's coat and eye colors,
  * with `scene` / `mood` / `tilt` / `zoom` controlling the illustration.
+ * `focus` (CSS object-position, default '50% 40%') sets which part of a photo
+ * stays visible when it's cropped square — e.g. '50% 0%' keeps the ears in.
  *   scene: aurora | forest | moon | snow | twilight | dawn
  *   mood:  calm | happy | howl | sleepy
  *
@@ -17,8 +19,82 @@
  *   rotationY: degrees to turn the model so it faces the camera
  *   color:     STL material color (default: a clay tone mixed from the coat)
  *   smooth:    false to keep STL's faceted look (default: smoothed)
+ *
+ * Approximate / unknown facts: `birthApprox` and `ageApprox` replace the exact
+ * birthday and computed age (keep a rough `birthDate` for sorting). These can
+ * be left out and their rows/panels are simply hidden: joined, height, weight,
+ * tail, ears, goodWith, skills, health, facts, individual traits/favorites.
  */
 export const dogs = [
+  {
+    // Faina — facts from her owner, her photo and her name tag. Unknown details
+    // (height, tail, when she joined, skills, health, "good with") are left out
+    // on purpose so the profile only shows what's true.
+    id: 'faina',
+    name: 'Faina',
+    nicknames: ['Fina', 'U blya'],
+    tagline: 'Street survivor turned sporty senior — one blue eye, one brown',
+    gender: 'female',
+    birthDate: '2013-01-01', // used for sorting/filters; the exact date isn't known
+    birthApprox: 'Around 2013–2014',
+    ageApprox: '13–14',
+    breed: 'Siberian Husky',
+    status: 'Adopted senior',
+    temper: 'Independent & sporty',
+    accent: ['#34d6cf', '#9ad8ff'],
+    coat: {
+      color: 'White-silver',
+      primary: '#c9ced6',
+      secondary: '#f5f6f8',
+      length: 'Medium',
+      pattern: 'White with silver shading',
+    },
+    eyes: { label: 'Bi-eyed — ice blue & brown', left: '#a9d1ee', right: '#5a3522' },
+    weight: 22.4,
+    ears: 'Tall and upright, pink inside',
+    tags: ['Rescue', 'Senior', 'Sporty', 'Playful'],
+    // Only the traits her owner described: independent, playful, sporty
+    traits: { energy: 8, independence: 10, playfulness: 9 },
+    lore: 'Abandoned on the streets at 7–8, rescued through SledDogPack — and at around 13–14 still independent, playful and sporty. Her tag says it best: Φαεινή, “the shining one”.',
+    story: [
+      'Faina was born around 2013–2014. For the first seven or eight years of her life she had a family — until her owners abandoned her and left her on the streets.',
+      'She didn’t give up. Faina made it to SledDogPack, and from there she found her person and came home to HuskyHub.',
+      'Today she’s a senior of around 13–14 who never got the memo about slowing down: independent, playful and sporty, with a white-silver coat, one ice-blue eye and one brown. She’ll do almost anything for meat — and, a little unexpectedly, for cucumbers.',
+      'Her round name tag spells her name in two alphabets — Φαεινή / ФАИНА. In Greek it means “shining”, which suits a white-silver dog who lights up a grey park.',
+    ],
+    timeline: [
+      { when: '2013–14', title: 'Born', text: 'Around 2013–2014.' },
+      { when: 'Age 7–8', title: 'Left on the streets', text: 'Her owners abandoned her.' },
+      { when: 'Rescue', title: 'SledDogPack', text: 'She made it to SledDogPack.' },
+      { when: 'Then', title: 'Home', text: 'Found her person and came home to HuskyHub.' },
+      { when: 'Today', title: 'Still sporty at 13–14', text: 'Independent, playful and always up for sport.' },
+    ],
+    habits: [
+      'Does things her own way — independent to the core.',
+      'Still plays like a youngster at around 13–14.',
+      'Always up for sport and an active walk.',
+      'Will do almost anything for meat — or a cucumber.',
+      'Wears her ornament snood on chilly walks.',
+    ],
+    favorites: {
+      food: 'Meat — and cucumbers',
+      activity: 'Sport & active walks',
+    },
+    facts: [
+      'Her name means “shining” in Greek (φαεινή); her tag spells it in Greek and Cyrillic',
+      'Her favourite snacks: meat and cucumbers',
+      'Still sporty and playful at around 13–14',
+      'One ice-blue eye, one brown',
+    ],
+    friends: [],
+    model: null,
+    photos: [
+      { src: 'photos/faina/01.jpg', caption: 'Park bench portrait in her snood', focus: '50% 0%' },
+      { caption: 'Illustration · Faina under the northern lights', scene: 'aurora', mood: 'calm', tilt: -4 },
+      { caption: 'Illustration · First snow of the season', scene: 'snow', mood: 'happy', tilt: 6 },
+      { caption: 'Illustration · Evening song under the moon', scene: 'moon', mood: 'howl', tilt: -14 },
+    ],
+  },
   {
     id: 'loki',
     name: 'Loki',

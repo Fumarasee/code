@@ -1,9 +1,9 @@
 import { dogs, getDog, traitLabels } from '../data/dogs.js';
 import { openGallery } from '../components/gallery.js';
 import { genderIcon, coatSwatch, eyeSwatch, statusClass } from '../components/dogCard.js';
-import { dogPhoto, dogPhotos } from '../lib/placeholders.js';
+import { dogPhoto, dogPhotos, focusStyle } from '../lib/placeholders.js';
 import { icon } from '../lib/icons.js';
-import { $, escapeHtml, formatAge, formatDate } from '../lib/utils.js';
+import { $, dogAge, escapeHtml, formatDate } from '../lib/utils.js';
 import { renderNotFound } from './notFound.js';
 
 const e = escapeHtml;
@@ -22,7 +22,7 @@ function hero(dog, photos) {
   return `
   <section class="profile-hero">
     <button type="button" class="profile-hero__portrait glass" data-open-gallery="0" aria-label="Open ${e(dog.name)}’s gallery">
-      <img src="${cover.src}" alt="${e(dog.name)}, portrait" style="view-transition-name: dog-hero" />
+      <img src="${cover.src}" alt="${e(dog.name)}, portrait" style="view-transition-name: dog-hero; ${focusStyle(cover)}" />
       <span class="profile-hero__zoom">${icon('images')}<span>${photos.length} photos</span></span>
     </button>
 
@@ -33,10 +33,18 @@ function hero(dog, photos) {
       <p class="profile-hero__lore reveal">${e(dog.lore)}</p>
 
       <ul class="quick-facts">
-        <li class="glass reveal" style="--i:4"><span class="quick-facts__icon">${icon('cake')}</span><div><small>Age</small><strong>${formatAge(dog.birthDate)}</strong></div></li>
-        <li class="glass reveal" style="--i:5"><span class="quick-facts__icon">${icon(dog.gender)}</span><div><small>Gender</small><strong>${dog.gender === 'male' ? 'Boy' : 'Girl'}</strong></div></li>
-        <li class="glass reveal" style="--i:6"><span class="quick-facts__icon">${icon('weight')}</span><div><small>Weight</small><strong>${dog.weight} kg</strong></div></li>
-        <li class="glass reveal" style="--i:7"><span class="quick-facts__icon">${icon('ruler')}</span><div><small>Height</small><strong>${dog.height} cm</strong></div></li>
+        ${[
+          ['cake', 'Age', dogAge(dog)],
+          [dog.gender, 'Gender', dog.gender === 'male' ? 'Boy' : 'Girl'],
+          dog.weight && ['weight', 'Weight', `${dog.weight} kg`],
+          dog.height && ['ruler', 'Height', `${dog.height} cm`],
+        ]
+          .filter(Boolean)
+          .map(
+            ([ic, label, value], i) =>
+              `<li class="glass reveal" style="--i:${i + 4}"><span class="quick-facts__icon">${icon(ic)}</span><div><small>${label}</small><strong>${value}</strong></div></li>`,
+          )
+          .join('')}
       </ul>
 
       <div class="tag-row reveal" style="--i:8">${dog.tags.map((t) => `<span class="chip chip--soft">${icon('tag')}${e(t)}</span>`).join('')}</div>
@@ -92,20 +100,25 @@ function specsPanel(dog) {
       </div>
     </div>
     <dl class="spec-list">
-      ${specRow('Breed', e(dog.breed), 'star')}
-      ${specRow('Birthday', formatDate(dog.birthDate), 'cake')}
-      ${specRow('Age', formatAge(dog.birthDate), 'clock')}
-      ${specRow('Gender', dog.gender === 'male' ? 'Male' : 'Female', dog.gender)}
-      ${specRow('Joined HuskyHub', formatDate(dog.joined), 'home')}
-      ${specRow('Coat color', `${coatSwatch(dog)}${e(dog.coat.color)}`, 'palette')}
-      ${specRow('Coat pattern', e(dog.coat.pattern), 'palette')}
-      ${specRow('Fur length', e(dog.coat.length), 'wind')}
-      ${specRow('Eye color', `${eyes}${e(dog.eyes.label)}`, 'eye')}
-      ${specRow('Height', `${dog.height} cm at the shoulder`, 'ruler')}
-      ${specRow('Weight', `${dog.weight} kg`, 'weight')}
-      ${specRow('Tail', e(dog.tail), 'sparkles')}
-      ${specRow('Ears', e(dog.ears), 'sparkles')}
-      ${specRow('Temper', e(dog.temper), 'heart')}
+      ${[
+        ['Breed', e(dog.breed), 'star'],
+        ['Birthday', dog.birthApprox ? e(dog.birthApprox) : formatDate(dog.birthDate), 'cake'],
+        ['Age', dogAge(dog), 'clock'],
+        ['Gender', dog.gender === 'male' ? 'Male' : 'Female', dog.gender],
+        dog.joined && ['Joined HuskyHub', formatDate(dog.joined), 'home'],
+        ['Coat color', `${coatSwatch(dog)}${e(dog.coat.color)}`, 'palette'],
+        dog.coat.pattern && ['Coat pattern', e(dog.coat.pattern), 'palette'],
+        ['Fur length', e(dog.coat.length), 'wind'],
+        ['Eye color', `${eyes}${e(dog.eyes.label)}`, 'eye'],
+        dog.height && ['Height', `${dog.height} cm at the shoulder`, 'ruler'],
+        dog.weight && ['Weight', `${dog.weight} kg`, 'weight'],
+        dog.tail && ['Tail', e(dog.tail), 'sparkles'],
+        dog.ears && ['Ears', e(dog.ears), 'sparkles'],
+        ['Temper', e(dog.temper), 'heart'],
+      ]
+        .filter(Boolean)
+        .map(([label, value, ic]) => specRow(label, value, ic))
+        .join('')}
     </dl>
   </aside>`;
 }
@@ -150,8 +163,9 @@ function temperamentSection(dog) {
       <h2 class="panel-title">${e(dog.temper)}</h2>
       <div class="traits">
         ${Object.entries(traitLabels)
+          .filter(([key]) => dog.traits[key] != null)
           .map(([key, label]) => {
-            const v = dog.traits[key] ?? 0;
+            const v = dog.traits[key];
             return `
           <div class="trait">
             <div class="trait__top"><span>${label}</span><span class="trait__value">${v}/10</span></div>
@@ -162,7 +176,9 @@ function temperamentSection(dog) {
           })
           .join('')}
       </div>
-      <div class="good-with">
+      ${
+        dog.goodWith
+          ? `<div class="good-with">
         <span class="good-with__label">Good with</span>
         ${goodWith
           .map(
@@ -170,7 +186,9 @@ function temperamentSection(dog) {
               `<span class="good-with__item ${dog.goodWith[key] ? 'is-yes' : 'is-no'}">${icon(dog.goodWith[key] ? 'check' : 'x')}${label}</span>`,
           )
           .join('')}
-      </div>
+      </div>`
+          : ''
+      }
     </div>
 
     <div class="habits glass reveal">
@@ -193,6 +211,7 @@ function favoritesSection(dog) {
   return `
   <section class="favorites" aria-label="Favourites">
     ${favs
+      .filter(([key]) => dog.favorites?.[key])
       .map(
         ([key, label, ic], i) => `
       <div class="fav glass reveal" style="--i:${i}">
@@ -211,14 +230,15 @@ function detailsSection(dog) {
     ['neutered', dog.gender === 'male' ? 'Neutered' : 'Spayed'],
     ['microchipped', 'Microchipped'],
   ];
-  return `
-  <section class="three-col">
-    <div class="glass panel reveal">
+  const panels = [
+    dog.skills?.length &&
+      `<div class="glass panel reveal">
       <p class="eyebrow">${icon('star')} Skills</p>
       <h2 class="panel-title">Knows how to</h2>
       <div class="tag-row">${dog.skills.map((s) => `<span class="chip">${e(s)}</span>`).join('')}</div>
-    </div>
-    <div class="glass panel reveal">
+    </div>`,
+    dog.health &&
+      `<div class="glass panel reveal">
       <p class="eyebrow">${icon('shield')} Health</p>
       <h2 class="panel-title">Health card</h2>
       <ul class="health-list">
@@ -229,14 +249,16 @@ function detailsSection(dog) {
           )
           .join('')}
       </ul>
-      <p class="panel-note">${e(dog.health.notes)}</p>
-    </div>
-    <div class="glass panel reveal">
+      ${dog.health.notes ? `<p class="panel-note">${e(dog.health.notes)}</p>` : ''}
+    </div>`,
+    dog.facts?.length &&
+      `<div class="glass panel reveal">
       <p class="eyebrow">${icon('sparkles')} Fun facts</p>
       <h2 class="panel-title">Did you know?</h2>
       <ul class="fact-list">${dog.facts.map((f) => `<li>${e(f)}</li>`).join('')}</ul>
-    </div>
-  </section>`;
+    </div>`,
+  ].filter(Boolean);
+  return panels.length ? `<section class="three-col">${panels.join('')}</section>` : '';
 }
 
 function gallerySection(dog, photos) {
@@ -254,7 +276,7 @@ function gallerySection(dog, photos) {
         .map(
           (p, i) => `
         <button type="button" class="photo-grid__item" data-open-gallery="${i}" style="--i:${i}" aria-label="Open photo: ${e(p.caption)}">
-          <img src="${p.src}" alt="" loading="lazy" decoding="async" />
+          <img src="${p.src}" style="${focusStyle(p)}" alt="" loading="lazy" decoding="async" />
           <span class="photo-grid__caption">${e(p.caption)}</span>
         </button>`,
         )
@@ -277,7 +299,7 @@ function friendsSection(dog) {
         .map(
           (f, i) => `
         <a class="friend glass reveal" href="#/dog/${f.id}" style="--i:${i + 1};--accent-1:${f.accent[0]};--accent-2:${f.accent[1]}">
-          <img src="${dogPhoto(f, 0).src}" alt="" loading="lazy" />
+          <img src="${dogPhoto(f, 0).src}" style="${focusStyle(dogPhoto(f, 0))}" alt="" loading="lazy" />
           <span><strong>${e(f.name)}</strong><small>${e(f.tagline)}</small></span>
           ${icon('arrowRight')}
         </a>`,
@@ -292,7 +314,7 @@ function pager(dog) {
   const link = (d, dir) => `
     <a class="pager__link pager__link--${dir} glass" href="#/dog/${d.id}">
       ${dir === 'prev' ? icon('arrowLeft') : ''}
-      <img src="${dogPhoto(d, 0).src}" alt="" />
+      <img src="${dogPhoto(d, 0).src}" style="${focusStyle(dogPhoto(d, 0))}" alt="" />
       <span><small>${dir === 'prev' ? 'Previous' : 'Next'} husky</small><strong>${e(d.name)}</strong></span>
       ${dir === 'next' ? icon('arrowRight') : ''}
     </a>`;

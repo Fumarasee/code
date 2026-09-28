@@ -3,7 +3,7 @@
  *   openGallery(dog, startIndex, { showProfileLink })
  * Keyboard: ← → to browse, Home/End, Esc to close. Drag/swipe also works.
  */
-import { dogPhotos } from '../lib/placeholders.js';
+import { dogPhotos, focusStyle } from '../lib/placeholders.js';
 import { icon } from '../lib/icons.js';
 import { escapeHtml, prefersReducedMotion } from '../lib/utils.js';
 
@@ -29,7 +29,7 @@ export function openGallery(dog, startIndex = 0, { showProfileLink = true } = {}
     <div class="gallery__panel glass glass--strong">
       <header class="gallery__head">
         <div class="gallery__title">
-          <img class="gallery__avatar" src="${photos[0].src}" alt="" />
+          <img class="gallery__avatar" src="${photos[0].src}" style="${focusStyle(photos[0])}" alt="" />
           <div>
             <h2 id="gallery-title">${escapeHtml(dog.name)}’s gallery</h2>
             <p class="gallery__counter" aria-live="polite"></p>
@@ -54,7 +54,7 @@ export function openGallery(dog, startIndex = 0, { showProfileLink = true } = {}
           .map(
             (p, i) => `
           <button type="button" class="gallery__thumb" role="tab" data-index="${i}" aria-label="Photo ${i + 1}: ${escapeHtml(p.caption)}">
-            <img src="${p.src}" alt="" loading="lazy" decoding="async" />
+            <img src="${p.src}" style="${focusStyle(p)}" alt="" loading="lazy" decoding="async" />
           </button>`,
           )
           .join('')}
