@@ -2,26 +2,16 @@ import { icon } from '../lib/icons.js';
 import { dogs } from '../data/dogs.js';
 import { uiState } from '../lib/state.js';
 
-const logo = `
-<svg viewBox="0 0 64 64" aria-hidden="true">
-  <defs>
-    <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#3cf2a4"/><stop offset=".55" stop-color="#34c6f4"/><stop offset="1" stop-color="#a86bff"/>
-    </linearGradient>
-  </defs>
-  <path d="M14 30 L19 10 L28 22 L36 22 L45 10 L50 30 C50 44 42 54 32 54 C22 54 14 44 14 30 Z" fill="url(#brandGrad)"/>
-  <path d="M32 30 C27 30 23 26 18 28 C18 40 24 48 32 50 C40 48 46 40 46 28 C41 26 37 30 32 30 Z" fill="#eaf6ff"/>
-  <circle cx="25" cy="33" r="2.6" fill="#0a1024"/><circle cx="39" cy="33" r="2.6" fill="#0a1024"/>
-  <path d="M29 40 Q32 38 35 40 Q34 43 32 43.5 Q30 43 29 40 Z" fill="#0a1024"/>
-</svg>`;
+// Official HuskyHub logo, light-lettered version for the dark theme
+// (original colours: public/brand/huskyhub-logo.webp)
+const LOGO_SRC = `${import.meta.env.BASE_URL}brand/huskyhub-logo-dark.webp`;
+const logo = (cls = '') =>
+  `<img class="brand__logo ${cls}" src="${LOGO_SRC}" alt="HuskyHub" width="900" height="188" decoding="async" />`;
 
 export function renderHeader(el) {
   el.innerHTML = `
     <div class="site-header__inner">
-      <a href="#/" class="brand" aria-label="HuskyHub — home">
-        <span class="brand__mark">${logo}</span>
-        <span class="brand__name">Husky<span>Hub</span></span>
-      </a>
+      <a href="#/" class="brand" aria-label="HuskyHub — home">${logo()}</a>
       <nav class="site-nav" aria-label="Main">
         <a href="#/" data-nav="home">${icon('paw')}<span>The pack</span></a>
         <button type="button" class="site-nav__search" data-action="search">
@@ -73,7 +63,7 @@ export function updateNav(routeName) {
 export function renderFooter(el) {
   el.innerHTML = `
     <div class="site-footer__inner">
-      <span class="brand__name brand__name--sm">Husky<span>Hub</span></span>
+      ${logo('brand__logo--sm')}
       <span>${dogs.length} huskies · one very loud choir · endless snow</span>
       <span class="site-footer__muted">© ${new Date().getFullYear()} HuskyHub</span>
     </div>`;

@@ -44,12 +44,15 @@ colors** ([`src/lib/placeholders.js`](src/lib/placeholders.js)). To use real pho
 
 ```js
 photos: [
-  { src: 'photos/loki/01.jpg', caption: 'Portrait under the first aurora of the season' },
+  { src: 'photos/loki/01.jpg', caption: 'Portrait under the first aurora of the season', focus: '50% 0%' },
   // entries without `src` keep using the generated illustration
 ],
 ```
 
-The first photo is the card cover and profile portrait.
+The first photo is the card cover and profile portrait. Cards and thumbnails crop photos to a square. `focus` is a
+CSS `object-position` value that picks which part stays in view: `'50% 0%'` keeps the top, so the ears aren't cut off.
+The default is `'50% 40%'`. Resize photos to about 1200px on the long side and strip location data before
+committing. Faina's photo in `public/photos/faina/` is an example.
 
 ### 3D models
 
@@ -71,6 +74,14 @@ Fine-tune a model with `modelOptions`:
 model: 'models/loki.stl',
 modelOptions: { rotationY: 90, up: 'z', color: '#8a8f99', smooth: true },
 ```
+
+## Brand
+
+| File | Use |
+| ---- | --- |
+| `public/brand/huskyhub-logo.webp` | Original logo (navy + teal), trimmed. Use it on light backgrounds. |
+| `public/brand/huskyhub-logo-dark.webp` | The same logo with the navy "H🐾sky" turned near-white. Used in the site's header and footer. |
+| `public/favicon.png`, `public/apple-touch-icon.png` | The logo's paw in white on the logo's teal. |
 
 ## Project structure
 

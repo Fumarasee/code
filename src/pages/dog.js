@@ -1,7 +1,7 @@
 import { dogs, getDog, traitLabels } from '../data/dogs.js';
 import { openGallery } from '../components/gallery.js';
 import { genderIcon, coatSwatch, eyeSwatch, statusClass } from '../components/dogCard.js';
-import { dogPhoto, dogPhotos } from '../lib/placeholders.js';
+import { dogPhoto, dogPhotos, focusStyle } from '../lib/placeholders.js';
 import { icon } from '../lib/icons.js';
 import { $, escapeHtml, formatAge, formatDate } from '../lib/utils.js';
 import { renderNotFound } from './notFound.js';
@@ -22,7 +22,7 @@ function hero(dog, photos) {
   return `
   <section class="profile-hero">
     <button type="button" class="profile-hero__portrait glass" data-open-gallery="0" aria-label="Open ${e(dog.name)}’s gallery">
-      <img src="${cover.src}" alt="${e(dog.name)}, portrait" style="view-transition-name: dog-hero" />
+      <img src="${cover.src}" alt="${e(dog.name)}, portrait" style="view-transition-name: dog-hero; ${focusStyle(cover)}" />
       <span class="profile-hero__zoom">${icon('images')}<span>${photos.length} photos</span></span>
     </button>
 
@@ -254,7 +254,7 @@ function gallerySection(dog, photos) {
         .map(
           (p, i) => `
         <button type="button" class="photo-grid__item" data-open-gallery="${i}" style="--i:${i}" aria-label="Open photo: ${e(p.caption)}">
-          <img src="${p.src}" alt="" loading="lazy" decoding="async" />
+          <img src="${p.src}" style="${focusStyle(p)}" alt="" loading="lazy" decoding="async" />
           <span class="photo-grid__caption">${e(p.caption)}</span>
         </button>`,
         )
@@ -277,7 +277,7 @@ function friendsSection(dog) {
         .map(
           (f, i) => `
         <a class="friend glass reveal" href="#/dog/${f.id}" style="--i:${i + 1};--accent-1:${f.accent[0]};--accent-2:${f.accent[1]}">
-          <img src="${dogPhoto(f, 0).src}" alt="" loading="lazy" />
+          <img src="${dogPhoto(f, 0).src}" style="${focusStyle(dogPhoto(f, 0))}" alt="" loading="lazy" />
           <span><strong>${e(f.name)}</strong><small>${e(f.tagline)}</small></span>
           ${icon('arrowRight')}
         </a>`,
@@ -292,7 +292,7 @@ function pager(dog) {
   const link = (d, dir) => `
     <a class="pager__link pager__link--${dir} glass" href="#/dog/${d.id}">
       ${dir === 'prev' ? icon('arrowLeft') : ''}
-      <img src="${dogPhoto(d, 0).src}" alt="" />
+      <img src="${dogPhoto(d, 0).src}" style="${focusStyle(dogPhoto(d, 0))}" alt="" />
       <span><small>${dir === 'prev' ? 'Previous' : 'Next'} husky</small><strong>${e(d.name)}</strong></span>
       ${dir === 'next' ? icon('arrowRight') : ''}
     </a>`;

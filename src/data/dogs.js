@@ -7,6 +7,8 @@
  * `photos/loki/01.jpg` placed in /public/photos/loki/). Entries without `src`
  * are rendered as generated illustrations using the dog's coat and eye colors,
  * with `scene` / `mood` / `tilt` / `zoom` controlling the illustration.
+ * `focus` (CSS object-position, default '50% 40%') sets which part of a photo
+ * stays visible when it's cropped square — e.g. '50% 0%' keeps the ears in.
  *   scene: aurora | forest | moon | snow | twilight | dawn
  *   mood:  calm | happy | howl | sleepy
  *
@@ -19,6 +21,75 @@
  *   smooth:    false to keep STL's faceted look (default: smoothed)
  */
 export const dogs = [
+  {
+    // Faina — from her photo and name tag. Fields marked "TODO: confirm" are
+    // placeholders (not known from the photo) — replace them with the real facts.
+    id: 'faina',
+    name: 'Faina',
+    nicknames: ['Phaeinē', 'Fainochka', 'Snow Queen'], // TODO: confirm
+    tagline: 'Snow-white girl with one ice-blue eye and one brown',
+    gender: 'female',
+    birthDate: '2023-03-01', // TODO: confirm
+    joined: '2024-01-15', // TODO: confirm
+    breed: 'Siberian Husky',
+    status: 'Resident', // TODO: confirm
+    temper: 'Gentle & watchful',
+    accent: ['#34d6cf', '#9ad8ff'],
+    coat: {
+      color: 'White (cream shading)',
+      primary: '#dcd4c6',
+      secondary: '#f7f4ee',
+      length: 'Medium, plush double coat',
+      pattern: 'Solid white with soft cream-grey shading on the face',
+    },
+    eyes: { label: 'Bi-eyed — ice blue & brown', left: '#a9d1ee', right: '#5a3522' },
+    height: 55, // TODO: confirm
+    weight: 21, // TODO: confirm
+    tail: 'Fluffy white sickle', // TODO: confirm
+    ears: 'Tall and upright, pink inside',
+    tags: ['Bi-eyed', 'Snow-white', 'Snood fashionista'],
+    traits: { energy: 7, friendliness: 9, independence: 6, vocality: 6, playfulness: 7, trainability: 7 }, // TODO: confirm
+    goodWith: { kids: true, dogs: true, cats: false }, // TODO: confirm
+    skills: ['Sit', 'Paw', 'Posing on park benches'], // TODO: confirm
+    lore: 'Her name tag says it in two alphabets — Φαεινή, “the shining one”. With a snow-white coat and one ice-blue eye, Faina lives up to it.',
+    // TODO: replace with Faina's real story
+    story: [
+      'Faina’s name comes from the Greek φαεινή — “shining, radiant” — and her round name tag spells it out in both Greek and Cyrillic: Φαεινή / ФАИНА. It suits her. In a grey early-spring park her white coat almost glows.',
+      'She walks out in style: a black harness with red trim and a cream snood patterned with bright red folk ornaments, wrapped snugly around her neck. It keeps the wind off and makes every walk look like a photo shoot.',
+      'Faina is at her best on a park bench next to her people — sitting tall, ears up, calmly watching everything that moves with one blue eye and one brown.',
+    ],
+    timeline: [
+      { when: 'Mar 2023', title: 'Born', text: 'A snow-white puppy with mismatched eyes.' }, // TODO: confirm
+      { when: 'Jan 2024', title: 'Joined HuskyHub', text: 'Became the pack’s shining one.' }, // TODO: confirm
+      { when: 'Spring', title: 'Park bench portrait', text: 'Her first official HuskyHub photo — snood on, ears up.' },
+    ],
+    habits: [
+      'Sits upright on park benches like she owns them.',
+      'Watches the world go by with calm, serious focus.',
+      'Wears her ornament snood on every chilly walk.',
+      'Turns her head to show off her best (blue-eyed) side.',
+    ],
+    favorites: {
+      food: 'Salmon treats', // TODO: confirm
+      toy: 'A soft rope toy', // TODO: confirm
+      place: 'Park benches with a view',
+      activity: 'Long park walks',
+    },
+    health: { vaccinated: true, neutered: true, microchipped: true, notes: 'Healthy.' }, // TODO: confirm
+    facts: [
+      'Her name means “shining” in Greek (φαεινή)',
+      'Her tag is bilingual: Greek and Cyrillic',
+      'One blue eye, one brown — heterochromia is common in huskies',
+    ],
+    friends: [],
+    model: null,
+    photos: [
+      { src: 'photos/faina/01.jpg', caption: 'Park bench portrait in her favourite snood', focus: '50% 0%' },
+      { caption: 'Illustration · Faina under the northern lights', scene: 'aurora', mood: 'calm', tilt: -4 },
+      { caption: 'Illustration · First snow of the season', scene: 'snow', mood: 'happy', tilt: 6 },
+      { caption: 'Illustration · Evening song under the moon', scene: 'moon', mood: 'howl', tilt: -14 },
+    ],
+  },
   {
     id: 'loki',
     name: 'Loki',

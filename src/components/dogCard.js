@@ -1,4 +1,4 @@
-import { dogPhoto } from '../lib/placeholders.js';
+import { dogPhoto, focusStyle } from '../lib/placeholders.js';
 import { icon } from '../lib/icons.js';
 import { escapeHtml, formatAge, prefersReducedMotion } from '../lib/utils.js';
 
@@ -29,7 +29,7 @@ export function dogCard(dog, i = 0) {
     style="--i:${i};--accent-1:${dog.accent[0]};--accent-2:${dog.accent[1]}">
     <div class="dog-card__glow" aria-hidden="true"></div>
     <div class="dog-card__media">
-      <img src="${cover.src}" alt="${name}, ${escapeHtml(dog.coat.color.toLowerCase())} husky" loading="lazy" decoding="async" />
+      <img src="${cover.src}" style="${focusStyle(cover)}" alt="${name}, ${escapeHtml(dog.coat.color.toLowerCase())} husky" loading="lazy" decoding="async" />
       <span class="status ${statusClass(dog.status)}">${escapeHtml(dog.status)}</span>
       <button type="button" class="dog-card__gallery" data-gallery="${dog.id}"
         aria-label="Open ${name}’s gallery, ${dog.photos.length} photos">

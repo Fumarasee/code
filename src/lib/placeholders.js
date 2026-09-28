@@ -246,17 +246,26 @@ function resolveSrc(src) {
   return `${import.meta.env.BASE_URL}${src}`;
 }
 
-/** Returns `{ src, caption, generated }` for the dog's photo at `index`. */
+/**
+ * Returns `{ src, caption, generated, focus }` for the dog's photo at `index`.
+ * `focus` is a CSS object-position used wherever the photo is cropped
+ * (cards, thumbnails, avatars); photo entries can override it.
+ */
 export function dogPhoto(dog, index = 0) {
   const shot = dog.photos[index] || dog.photos[0] || { scene: 'aurora' };
-  if (shot.src) return { src: resolveSrc(shot.src), caption: shot.caption || '', generated: false };
+  const focus = shot.focus || '50% 40%';
+  const caption = shot.caption || '';
+  if (shot.src) return { src: resolveSrc(shot.src), caption, generated: false, focus };
   const key = `${dog.id}:${index}`;
   if (!cache.has(key)) {
     const svg = buildSvg(dog, shot, index);
     cache.set(key, `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`);
   }
-  return { src: cache.get(key), caption: shot.caption || '', generated: true };
+  return { src: cache.get(key), caption, generated: true, focus };
 }
+
+/** Inline style that keeps the photo's focal point in view when cropped. */
+export const focusStyle = (photo) => `object-position:${photo.focus}`;
 
 export function dogPhotos(dog) {
   return dog.photos.map((_, i) => dogPhoto(dog, i));

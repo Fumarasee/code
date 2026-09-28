@@ -369,36 +369,29 @@ kbd {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  padding: 4px 0;
+  border-radius: 10px;
 }
 
-.brand__mark svg {
-  width: 34px;
-  height: 34px;
-  filter: drop-shadow(0 0 12px rgba(60, 242, 164, 0.45));
-  transition: transform 0.6s var(--ease-spring);
+.brand__logo {
+  display: block;
+  width: auto;
+  height: 32px;
+  filter: drop-shadow(0 0 14px rgba(15, 148, 160, 0.35));
+  transition:
+    transform 0.6s var(--ease-spring),
+    filter 0.4s;
 }
 
-.brand:hover .brand__mark svg {
-  transform: rotate(-10deg) scale(1.1);
+.brand:hover .brand__logo {
+  transform: scale(1.04);
+  filter: drop-shadow(0 0 18px rgba(15, 148, 160, 0.75));
 }
 
-.brand__name {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.22rem;
-  letter-spacing: -0.02em;
-}
-
-.brand__name span {
-  background: var(--grad-aurora);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.brand__name--sm {
-  font-size: 1rem;
+.brand__logo--sm {
+  height: 24px;
+  filter: none;
+  opacity: 0.85;
 }
 
 .site-nav {
@@ -592,6 +585,8 @@ kbd {
   top: 12px;
   left: 12px;
   z-index: 2;
+  /* Dark backing keeps the label readable over bright real photos */
+  background-color: rgba(6, 10, 26, 0.62);
 }
 
 .dog-card__gallery {

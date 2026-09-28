@@ -1,7 +1,7 @@
 import { dogs, getDog } from '../data/dogs.js';
 import { dogCard, attachCardEffects } from '../components/dogCard.js';
 import { openGallery } from '../components/gallery.js';
-import { dogPhoto } from '../lib/placeholders.js';
+import { dogPhoto, focusStyle } from '../lib/placeholders.js';
 import { icon } from '../lib/icons.js';
 import { $, $$, ageFrom, escapeHtml, formatAge, prefersReducedMotion } from '../lib/utils.js';
 import { uiState } from '../lib/state.js';
@@ -98,7 +98,7 @@ function heroStack() {
     .map(
       (d, i) => `
       <a class="hero-stack__card glass" href="#/dog/${d.id}" style="--i:${i};--accent-1:${d.accent[0]};--accent-2:${d.accent[1]}" data-hero-dog="${d.id}">
-        <img src="${dogPhoto(d, 0).src}" alt="${escapeHtml(d.name)}" data-hero-img />
+        <img src="${dogPhoto(d, 0).src}" style="${focusStyle(dogPhoto(d, 0))}" alt="${escapeHtml(d.name)}" data-hero-img />
         <span class="hero-stack__label"><strong>${escapeHtml(d.name)}</strong><small>${formatAge(d.birthDate, { short: true })} · ${escapeHtml(d.temper)}</small></span>
       </a>`,
     )
@@ -289,7 +289,7 @@ export function renderHome(app, { fromDogId = null } = {}) {
             (d, i) => `
           <li role="option" id="suggestion-${d.id}" class="search__option${i === activeIndex ? ' is-active' : ''}"
               data-id="${d.id}" aria-selected="${i === activeIndex}">
-            <img src="${dogPhoto(d, 0).src}" alt="" />
+            <img src="${dogPhoto(d, 0).src}" style="${focusStyle(dogPhoto(d, 0))}" alt="" />
             <span class="search__option-text">
               <strong>${highlight(d.name, q)}</strong>
               <small>${highlight(matchReason(d, q), q)}</small>
