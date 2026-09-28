@@ -90,9 +90,9 @@ export const dogs = [
     model: null,
     photos: [
       { src: 'photos/faina/01.jpg', caption: 'Park bench portrait in her snood', focus: '50% 0%' },
-      { src: 'photos/faina/02.jpg', caption: 'Illustration · Faina under the northern lights', scene: 'aurora', mood: 'calm', tilt: -4 },
-      { src: 'photos/faina/03.jpg', caption: 'Illustration · First snow of the season', scene: 'snow', mood: 'happy', tilt: 6 },
-      { src: 'photos/faina/04.jpg', caption: 'Illustration · Evening song under the moon', scene: 'moon', mood: 'howl', tilt: -14 },
+      { src: 'photos/faina/02.jpg', caption: 'Ready for the rain in her polka-dot raincoat', focus: '50% 0%' },
+      { src: 'photos/faina/03.jpg', caption: 'Glowing blue — her very own northern lights', focus: '50% 0%' },
+      { src: 'photos/faina/04.jpg', caption: 'Nap time with her plush toy', focus: '50% 60%' },
     ],
   },
   {
