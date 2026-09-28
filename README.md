@@ -100,8 +100,14 @@ for the web.
 - **Type.** The platform's system font (SF Pro on Apple devices, Segoe UI on Windows). Letter-spacing and
   line-height change with size: display text is tightened to `-0.03em`, body text is left at `0`, and small caps
   labels get positive tracking. Spacing is in `rem`, so the layout scales with the user's text size.
+- **Background.** The northern lights are a WebGL shader (`src/components/aurora.js`, adapted from ReactBits'
+  `<Aurora>`) with no dependencies. It renders at half resolution and 30 fps because the aurora is soft, which also
+  halves the redraw work for every glass panel above it. It runs in one loop with the star canvas and pauses in
+  background tabs. It falls back to a static glow without WebGL. Colours, blend, amplitude and speed are set in
+  `initAurora({...})` in `src/main.js`.
 - **Accessibility.**
-  - `prefers-reduced-motion`: movement becomes instant and fades are kept, so feedback isn't lost.
+  - `prefers-reduced-motion`: movement becomes instant and fades are kept, so feedback isn't lost. The aurora
+    shows a single still frame.
   - `prefers-reduced-transparency`: surfaces turn solid.
   - `prefers-contrast: more`: borders and text get stronger.
 

@@ -96,6 +96,12 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
 renderHeader(document.getElementById('site-header'));
 renderFooter(document.getElementById('site-footer'));
-initAurora();
+// Northern-lights shader (adapted from ReactBits' <Aurora>)
+initAurora({
+  colorStops: ['#7cff67', '#00e8f5', '#00fc97'],
+  blend: 0.87,
+  amplitude: 1.0,
+  speed: 0.4,
+});
 window.addEventListener('hashchange', navigate);
 navigate();

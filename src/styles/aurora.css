@@ -1,4 +1,7 @@
-/* Fixed northern-lights background: blurred drifting bands + star canvas. */
+/*
+ * Fixed northern-lights background (see components/aurora.js):
+ *   night-sky gradient → star canvas → WebGL aurora → grain → bottom fade
+ */
 .aurora {
   --px: 0;
   --py: 0;
@@ -20,66 +23,36 @@
   height: 100%;
 }
 
-.aurora__band {
+/*
+ * The shader canvas renders at half resolution and is scaled up by CSS
+ * (smooth bilinear — the aurora is soft anyway). It overhangs the viewport a
+ * little so the parallax never reveals an edge.
+ */
+.aurora__gl {
   position: absolute;
-  border-radius: 50%;
-  mix-blend-mode: screen;
-  will-change: transform;
+  top: -3%;
+  left: -3%;
+  width: 106%;
+  height: 106%;
+  translate: calc(var(--px) * -28px) calc(var(--py) * -16px);
   transition: translate 1.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.aurora__band--1 {
-  width: 78vw;
-  height: 34vh;
-  left: -12vw;
-  top: -4vh;
-  background: linear-gradient(100deg, transparent 5%, #3cf2a4 32%, #2de2d0 55%, transparent 90%);
-  filter: blur(70px);
-  opacity: 0.5;
-  translate: calc(var(--px) * -36px) calc(var(--py) * -22px);
-  animation: band-1 24s ease-in-out infinite alternate;
+/* No WebGL: a still, soft glow where the aurora would be */
+.aurora--static .aurora__gl {
+  display: none;
 }
 
-.aurora__band--2 {
-  width: 64vw;
-  height: 40vh;
-  right: -14vw;
-  top: -10vh;
-  background: linear-gradient(80deg, transparent 5%, #a86bff 40%, #ff6ec7 70%, transparent 95%);
-  filter: blur(80px);
-  opacity: 0.42;
-  translate: calc(var(--px) * 30px) calc(var(--py) * -18px);
-  animation: band-2 28s ease-in-out infinite alternate;
-}
-
-.aurora__band--3 {
-  width: 56vw;
-  height: 26vh;
-  left: 22vw;
-  top: 18vh;
-  background: linear-gradient(95deg, transparent, #34c6f4 45%, #3cf2a4 70%, transparent);
-  filter: blur(90px);
-  opacity: 0.28;
-  translate: calc(var(--px) * -20px) calc(var(--py) * 14px);
-  animation: band-3 32s ease-in-out infinite alternate;
-}
-
-/* Curtain with vertical rays for texture */
-.aurora__band--4 {
-  width: 90vw;
-  height: 46vh;
-  left: 4vw;
-  top: -12vh;
-  border-radius: 40% 60% 50% 50% / 30% 30% 70% 70%;
+.aurora--static::before {
+  content: '';
+  position: absolute;
+  inset: -10% -10% auto;
+  height: 70%;
   background:
-    linear-gradient(180deg, transparent 10%, rgba(60, 242, 164, 0.55) 62%, rgba(52, 198, 244, 0.25) 80%, transparent),
-    linear-gradient(90deg, transparent, rgba(168, 107, 255, 0.4) 70%, transparent);
-  -webkit-mask-image: repeating-linear-gradient(92deg, #000 0 3px, rgba(0, 0, 0, 0.35) 3px 11px, #000 11px 14px, rgba(0, 0, 0, 0.2) 14px 26px);
-  mask-image: repeating-linear-gradient(92deg, #000 0 3px, rgba(0, 0, 0, 0.35) 3px 11px, #000 11px 14px, rgba(0, 0, 0, 0.2) 14px 26px);
-  filter: blur(16px);
-  opacity: 0.3;
-  translate: calc(var(--px) * -50px) calc(var(--py) * -26px);
-  animation: band-4 20s ease-in-out infinite alternate;
+    radial-gradient(ellipse 45% 55% at 20% 15%, rgba(124, 255, 103, 0.45), transparent 70%),
+    radial-gradient(ellipse 50% 60% at 55% 5%, rgba(0, 232, 245, 0.4), transparent 70%),
+    radial-gradient(ellipse 40% 50% at 90% 15%, rgba(0, 252, 151, 0.38), transparent 70%);
+  filter: blur(40px);
 }
 
 .aurora__grain {
@@ -98,58 +71,9 @@
   background: linear-gradient(180deg, transparent, rgba(2, 4, 13, 0.7));
 }
 
-@keyframes band-1 {
-  0% {
-    transform: rotate(-8deg) scaleX(1);
-  }
-  50% {
-    transform: rotate(-3deg) scaleX(1.18) translateX(6vw);
-  }
-  100% {
-    transform: rotate(-11deg) scaleX(0.94) translate(-3vw, 4vh);
-  }
-}
-
-@keyframes band-2 {
-  0% {
-    transform: rotate(10deg) scale(1);
-  }
-  50% {
-    transform: rotate(4deg) scale(1.12, 0.9) translateX(-8vw);
-  }
-  100% {
-    transform: rotate(14deg) scale(0.95, 1.1) translateY(5vh);
-  }
-}
-
-@keyframes band-3 {
-  0% {
-    transform: rotate(-4deg) translateX(-6vw);
-  }
-  100% {
-    transform: rotate(6deg) translateX(8vw) scaleX(1.2);
-  }
-}
-
-@keyframes band-4 {
-  0% {
-    transform: skewX(-8deg) translateX(-4vw) scaleY(0.95);
-  }
-  50% {
-    transform: skewX(4deg) translateX(3vw) scaleY(1.08);
-  }
-  100% {
-    transform: skewX(-2deg) translateX(6vw) scaleY(1);
-  }
-}
-
-/*
- * Reduced motion: no drifting full-viewport background. The aurora stays as a
- * still image (the star canvas is already static in aurora.js).
- */
+/* Reduced motion: aurora.js draws one still frame; no parallax either */
 @media (prefers-reduced-motion: reduce) {
-  .aurora__band {
-    animation: none !important;
+  .aurora__gl {
     translate: none !important;
   }
 }
