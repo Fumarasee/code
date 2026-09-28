@@ -14,6 +14,18 @@ import { renderDog } from './pages/dog.js';
 import { renderNotFound } from './pages/notFound.js';
 import { $$, observeReveals, withViewTransition } from './lib/utils.js';
 import { uiState } from './lib/state.js';
+import { springEasing, supportsLinearEasing } from './lib/spring.js';
+
+// One motion language: CSS state changes run on the exact spring the JS uses
+// (critically damped, 0.35 s response), expressed as a CSS linear() curve.
+if (supportsLinearEasing()) {
+  const { easing, duration } = springEasing({ damping: 1, response: 0.35 });
+  document.documentElement.style.setProperty('--spring', easing);
+  document.documentElement.style.setProperty('--spring-duration', `${duration}s`);
+}
+
+// iOS Safari only shows :active (press feedback) once a touch listener exists
+document.addEventListener('touchstart', () => {}, { passive: true });
 
 const app = document.getElementById('app');
 

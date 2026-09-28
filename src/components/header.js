@@ -19,7 +19,7 @@ export function renderHeader(el) {
         </button>
       </nav>
       <button type="button" class="btn btn--ghost btn--sm" data-action="random" title="Open a random husky">
-        ${icon('shuffle')}<span>Surprise me</span>
+        ${icon('shuffle')}<span>Random husky</span>
       </button>
     </div>`;
 
@@ -35,7 +35,12 @@ export function renderHeader(el) {
     if (btn.dataset.action === 'search') focusSearch();
   });
 
-  const onScroll = () => el.classList.toggle('is-scrolled', window.scrollY > 12);
+  // Scrolled state: the header settles up a touch and the scroll-edge blur appears
+  const onScroll = () => {
+    const scrolled = window.scrollY > 12;
+    el.classList.toggle('is-scrolled', scrolled);
+    document.documentElement.classList.toggle('is-scrolled', scrolled);
+  };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 }

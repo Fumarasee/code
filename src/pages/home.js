@@ -5,6 +5,10 @@ import { dogPhoto, focusStyle } from '../lib/placeholders.js';
 import { icon } from '../lib/icons.js';
 import { $, $$, ageFrom, dogAge, escapeHtml, prefersReducedMotion } from '../lib/utils.js';
 import { uiState } from '../lib/state.js';
+import { springEasing, supportsLinearEasing } from '../lib/spring.js';
+
+// Cards glide to their new places on the same critically damped spring as the rest of the UI
+const REFLOW = supportsLinearEasing() ? springEasing({ damping: 1, response: 0.38 }) : null;
 
 const FILTERS = [
   { id: 'all', label: 'All', test: () => true },
@@ -246,9 +250,10 @@ export function renderHome(app, { fromDogId = null } = {}) {
       const dx = old.left - now.left;
       const dy = old.top - now.top;
       if (dx || dy) {
-        card.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'translate(0, 0)' }], {
-          duration: 650,
-          easing: 'cubic-bezier(.22,1,.36,1)',
+        // `translate` (not `transform`) so the pointer-driven tilt keeps working mid-move
+        card.animate([{ translate: `${dx}px ${dy}px` }, { translate: '0 0' }], {
+          duration: REFLOW ? REFLOW.duration * 1000 : 600,
+          easing: REFLOW ? REFLOW.easing : 'cubic-bezier(0.25, 1, 0.5, 1)',
         });
       }
     });
@@ -271,11 +276,26 @@ export function renderHome(app, { fromDogId = null } = {}) {
   let activeIndex = -1;
   let suggestions = [];
 
+  /** The popover returns into the field it came from (same path out as in). */
   function hideSuggestions() {
-    suggestionsEl.hidden = true;
     input.setAttribute('aria-expanded', 'false');
     input.removeAttribute('aria-activedescendant');
     activeIndex = -1;
+    if (suggestionsEl.hidden || suggestionsEl.classList.contains('is-leaving')) return;
+    if (reduced) {
+      suggestionsEl.hidden = true;
+      return;
+    }
+    suggestionsEl.classList.add('is-leaving');
+    suggestionsEl.addEventListener(
+      'animationend',
+      () => {
+        if (!suggestionsEl.classList.contains('is-leaving')) return;
+        suggestionsEl.classList.remove('is-leaving');
+        suggestionsEl.hidden = true;
+      },
+      { once: true },
+    );
   }
 
   function renderSuggestions() {
@@ -301,6 +321,7 @@ export function renderHome(app, { fromDogId = null } = {}) {
           )
           .join('')
       : `<li class="search__none">No husky answers to “${escapeHtml(q)}”… yet.</li>`;
+    suggestionsEl.classList.remove('is-leaving');
     suggestionsEl.hidden = false;
     input.setAttribute('aria-expanded', 'true');
     if (activeIndex >= 0) input.setAttribute('aria-activedescendant', `suggestion-${suggestions[activeIndex].id}`);
@@ -320,7 +341,7 @@ export function renderHome(app, { fromDogId = null } = {}) {
     renderSuggestions();
   });
   input.addEventListener('focus', renderSuggestions);
-  input.addEventListener('blur', () => setTimeout(hideSuggestions, 120));
+  input.addEventListener('blur', hideSuggestions);
   input.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       if (!suggestions.length || suggestionsEl.hidden) return;
@@ -391,7 +412,7 @@ export function renderHome(app, { fromDogId = null } = {}) {
     const galleryBtn = e.target.closest('[data-gallery]');
     if (galleryBtn) {
       e.preventDefault();
-      openGallery(getDog(galleryBtn.dataset.gallery), 0);
+      openGallery(getDog(galleryBtn.dataset.gallery), 0, { origin: galleryBtn });
       return;
     }
     const card = e.target.closest('.dog-card');

@@ -75,6 +75,36 @@ model: 'models/loki.stl',
 modelOptions: { rotationY: 90, up: 'z', color: '#8a8f99', smooth: true },
 ```
 
+## Design
+
+The interface follows Apple's fluid-interface principles, from the WWDC talk *Designing Fluid Interfaces*, adapted
+for the web.
+
+- **Springs, not durations.** Motion uses springs (`src/lib/spring.js`) set by a *damping ratio* and a *response*,
+  like UIKit and SwiftUI. UI springs are critically damped (damping 1.0, so no overshoot). A little bounce is used
+  only after a flick. CSS state changes share the exact same curve: `main.js` writes it into `--spring` as a CSS
+  `linear()` easing.
+- **Interruptible gestures.** In the gallery, photos follow the pointer 1:1 once it has moved 10px. You can grab a
+  photo mid-animation and it continues from where it is on screen. On release, the pointer's velocity carries into
+  the spring, and flicks project forward like scroll momentum. The track rubber-bands at the first and last photo.
+  Dragging down dismisses the gallery, and your velocity decides whether it closes. It never locks out input
+  while closing.
+- **Spatial consistency.** The gallery grows out of the button or photo that opened it and returns into it. The
+  search popover grows from the field and closes back into it. The dog's photo morphs between its card and the
+  profile portrait.
+- **Instant feedback.** Anything you can click responds on pointer-down: a 100ms press using the separate `scale`
+  property. There is no tap delay. Things you can't click don't react to hover.
+- **Materials.** Thin, regular and thick glass signal hierarchy: bigger surfaces have stronger blur and deeper
+  shadows. Glass is never stacked on glass; cells inside a card are a darker inset. Content softly blurs where it
+  passes under the floating header, instead of a hard divider line.
+- **Type.** The platform's system font (SF Pro on Apple devices, Segoe UI on Windows). Letter-spacing and
+  line-height change with size: display text is tightened to `-0.03em`, body text is left at `0`, and small caps
+  labels get positive tracking. Spacing is in `rem`, so the layout scales with the user's text size.
+- **Accessibility.**
+  - `prefers-reduced-motion`: movement becomes instant and fades are kept, so feedback isn't lost.
+  - `prefers-reduced-transparency`: surfaces turn solid.
+  - `prefers-contrast: more`: borders and text get stronger.
+
 ## Brand
 
 | File | Use |

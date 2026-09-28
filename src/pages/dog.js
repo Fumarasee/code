@@ -269,7 +269,7 @@ function gallerySection(dog, photos) {
         <p class="eyebrow">${icon('images')} Gallery</p>
         <h2 class="panel-title" id="gallery-heading">Moments with ${e(dog.name)}</h2>
       </div>
-      <button type="button" class="btn btn--ghost btn--sm" data-open-gallery="0">${icon('maximize')}<span>Full screen</span></button>
+      <button type="button" class="btn btn--ghost btn--sm" data-open-gallery="0">${icon('images')}<span>Open gallery</span></button>
     </div>
     <div class="photo-grid">
       ${photos
@@ -353,7 +353,7 @@ export function renderDog(app, { id }) {
   const onClick = (ev) => {
     const g = ev.target.closest('[data-open-gallery]');
     if (g) {
-      openGallery(dog, Number(g.dataset.openGallery), { showProfileLink: false });
+      openGallery(dog, Number(g.dataset.openGallery), { showProfileLink: false, origin: g });
       return;
     }
     const s = ev.target.closest('[data-scroll]');

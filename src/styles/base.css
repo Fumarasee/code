@@ -5,7 +5,11 @@
 }
 
 html {
+  /* 100% respects the user's text-size setting; all spacing is in rem */
+  font: 100% / var(--lead-body) var(--font-text);
+  font-optical-sizing: auto;
   -webkit-text-size-adjust: 100%;
+  touch-action: manipulation; /* no double-tap-zoom delay on taps */
   scrollbar-gutter: stable;
   background: var(--bg-0);
 }
@@ -19,9 +23,7 @@ body {
   min-height: 100vh;
   background: var(--bg-0);
   color: var(--text-1);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.6;
+  letter-spacing: var(--track-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -37,6 +39,7 @@ input,
 select {
   font: inherit;
   color: inherit;
+  letter-spacing: inherit;
 }
 
 a {
@@ -50,8 +53,9 @@ h3,
 h4 {
   margin: 0;
   font-family: var(--font-display);
-  line-height: 1.08;
-  letter-spacing: -0.025em;
+  font-weight: 700;
+  line-height: var(--lead-heading);
+  letter-spacing: var(--track-heading);
 }
 
 p {
@@ -110,27 +114,52 @@ p {
   z-index: 1;
   width: min(100% - var(--gutter), var(--container));
   margin-inline: auto;
-  padding: 118px 0 72px;
+  padding: 7.375rem 0 4.5rem;
   min-height: 100vh;
   outline: none;
+  transform-origin: 50% 50vh;
+}
+
+/*
+ * Scroll edge effect: instead of a divider under the floating header, content
+ * softly blurs and fades where it passes beneath it — only once it overlaps.
+ */
+.scroll-edge {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 40;
+  height: 6.5rem;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(2, 4, 13, 0.85), rgba(2, 4, 13, 0));
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(180deg, #000 45%, transparent);
+  mask-image: linear-gradient(180deg, #000 45%, transparent);
+  opacity: 0;
+  transition: opacity var(--fade);
+}
+
+html.is-scrolled .scroll-edge {
+  opacity: 1;
 }
 
 /* ------------------------------------------------------ view transitions -- */
 /*
  * Route changes cross-fade the whole page (so glass keeps its backdrop blur)
- * while the dog photo morphs from its card into the profile portrait.
+ * while the dog photo morphs between its card and the profile portrait —
+ * leaving and returning along the same path.
  */
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.45s;
-  animation-timing-function: var(--ease-out);
+  animation-duration: 0.28s;
+  animation-timing-function: ease;
 }
 
 ::view-transition-group(dog-hero) {
   z-index: 10;
-  animation-duration: 0.7s;
-  animation-timing-function: var(--ease-out);
+  animation-duration: var(--spring-duration);
+  animation-timing-function: var(--spring);
 }
 
 ::view-transition-old(dog-hero),
@@ -138,27 +167,28 @@ p {
   height: 100%;
   object-fit: cover;
   object-position: 50% 40%;
-  animation-duration: 0.7s;
+  animation-duration: var(--spring-duration);
 }
 
 /* --------------------------------------------------------------- reveal -- */
 /*
- * Note: only put `.reveal` on glass elements themselves (or non-glass
- * containers). An ancestor with opacity < 1 cuts off `backdrop-filter`.
+ * Short and light so content is readable almost immediately.
+ * Only put `.reveal` on glass elements themselves (or non-glass containers):
+ * an ancestor with opacity < 1 cuts off `backdrop-filter`.
  */
 
 .reveal {
   opacity: 0;
 }
 .reveal.is-visible {
-  animation: reveal-in 0.8s var(--ease-out) both;
-  animation-delay: calc(var(--i, 0) * 55ms);
+  animation: reveal-in var(--spring-duration) var(--spring) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
 }
 
 @keyframes reveal-in {
   from {
     opacity: 0;
-    translate: 0 26px;
+    translate: 0 0.75rem;
   }
   to {
     opacity: 1;
@@ -174,58 +204,54 @@ p {
   }
 }
 
-@keyframes spin-angle {
-  to {
-    --angle: 360deg;
-  }
-}
-
-@keyframes grad-shift {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    opacity: 0.75;
-    scale: 1;
-  }
-  50% {
-    opacity: 1;
-    scale: 1.08;
-  }
-}
-
-@keyframes pop-in {
+@keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(-6px) scale(0.98);
   }
 }
 
+/* Glass arriving as a real material: blur, scale and opacity together */
+@keyframes materialize-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+    filter: blur(6px);
+  }
+}
+
+@keyframes materialize-out {
+  to {
+    opacity: 0;
+    transform: scale(0.97);
+    filter: blur(4px);
+  }
+}
+
+/*
+ * Reduced motion ≠ no feedback. Movement becomes instant; opacity and colour
+ * changes stay (as short cross-fades) because they aid comprehension.
+ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
+    transition-property: opacity, color, background-color, border-color, box-shadow !important;
+    transition-duration: 150ms !important;
     animation-iteration-count: 1 !important;
-    animation-delay: 0ms !important;
-    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .reveal.is-visible,
+  .dog-card,
+  .search__suggestions {
+    animation: fade-in 200ms ease both !important;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 40em) {
   :root {
-    --gutter: 32px;
+    --gutter: 2rem;
   }
   #app {
-    padding-top: 100px;
+    padding-top: 6.25rem;
   }
 }

@@ -25,7 +25,7 @@
   border-radius: 50%;
   mix-blend-mode: screen;
   will-change: transform;
-  transition: translate 1.4s var(--ease-out);
+  transition: translate 1.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .aurora__band--1 {
@@ -140,5 +140,16 @@
   }
   100% {
     transform: skewX(-2deg) translateX(6vw) scaleY(1);
+  }
+}
+
+/*
+ * Reduced motion: no drifting full-viewport background. The aurora stays as a
+ * still image (the star canvas is already static in aurora.js).
+ */
+@media (prefers-reduced-motion: reduce) {
+  .aurora__band {
+    animation: none !important;
+    translate: none !important;
   }
 }
