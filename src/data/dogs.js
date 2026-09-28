@@ -19,72 +19,77 @@
  *   rotationY: degrees to turn the model so it faces the camera
  *   color:     STL material color (default: a clay tone mixed from the coat)
  *   smooth:    false to keep STL's faceted look (default: smoothed)
+ *
+ * Approximate / unknown facts: `birthApprox` and `ageApprox` replace the exact
+ * birthday and computed age (keep a rough `birthDate` for sorting). These can
+ * be left out and their rows/panels are simply hidden: joined, height, weight,
+ * tail, ears, goodWith, skills, health, facts, individual traits/favorites.
  */
 export const dogs = [
   {
-    // Faina — from her photo and name tag. Fields marked "TODO: confirm" are
-    // placeholders (not known from the photo) — replace them with the real facts.
+    // Faina — facts from her owner, her photo and her name tag. Unknown details
+    // (height, tail, when she joined, skills, health, "good with") are left out
+    // on purpose so the profile only shows what's true.
     id: 'faina',
     name: 'Faina',
-    nicknames: ['Phaeinē', 'Fainochka', 'Snow Queen'], // TODO: confirm
-    tagline: 'Snow-white girl with one ice-blue eye and one brown',
+    nicknames: ['Fina', 'U blya'],
+    tagline: 'Street survivor turned sporty senior — one blue eye, one brown',
     gender: 'female',
-    birthDate: '2023-03-01', // TODO: confirm
-    joined: '2024-01-15', // TODO: confirm
+    birthDate: '2013-01-01', // used for sorting/filters; the exact date isn't known
+    birthApprox: 'Around 2013–2014',
+    ageApprox: '13–14',
     breed: 'Siberian Husky',
-    status: 'Resident', // TODO: confirm
-    temper: 'Gentle & watchful',
+    status: 'Adopted senior',
+    temper: 'Independent & sporty',
     accent: ['#34d6cf', '#9ad8ff'],
     coat: {
-      color: 'White (cream shading)',
-      primary: '#dcd4c6',
-      secondary: '#f7f4ee',
-      length: 'Medium, plush double coat',
-      pattern: 'Solid white with soft cream-grey shading on the face',
+      color: 'White-silver',
+      primary: '#c9ced6',
+      secondary: '#f5f6f8',
+      length: 'Medium',
+      pattern: 'White with silver shading',
     },
     eyes: { label: 'Bi-eyed — ice blue & brown', left: '#a9d1ee', right: '#5a3522' },
-    height: 55, // TODO: confirm
-    weight: 21, // TODO: confirm
-    tail: 'Fluffy white sickle', // TODO: confirm
+    weight: 22.4,
     ears: 'Tall and upright, pink inside',
-    tags: ['Bi-eyed', 'Snow-white', 'Snood fashionista'],
-    traits: { energy: 7, friendliness: 9, independence: 6, vocality: 6, playfulness: 7, trainability: 7 }, // TODO: confirm
-    goodWith: { kids: true, dogs: true, cats: false }, // TODO: confirm
-    skills: ['Sit', 'Paw', 'Posing on park benches'], // TODO: confirm
-    lore: 'Her name tag says it in two alphabets — Φαεινή, “the shining one”. With a snow-white coat and one ice-blue eye, Faina lives up to it.',
-    // TODO: replace with Faina's real story
+    tags: ['Rescue', 'Senior', 'Sporty', 'Playful'],
+    // Only the traits her owner described: independent, playful, sporty
+    traits: { energy: 8, independence: 10, playfulness: 9 },
+    lore: 'Abandoned on the streets at 7–8, rescued through SledDogPack — and at around 13–14 still independent, playful and sporty. Her tag says it best: Φαεινή, “the shining one”.',
     story: [
-      'Faina’s name comes from the Greek φαεινή — “shining, radiant” — and her round name tag spells it out in both Greek and Cyrillic: Φαεινή / ФАИНА. It suits her. In a grey early-spring park her white coat almost glows.',
-      'She walks out in style: a black harness with red trim and a cream snood patterned with bright red folk ornaments, wrapped snugly around her neck. It keeps the wind off and makes every walk look like a photo shoot.',
-      'Faina is at her best on a park bench next to her people — sitting tall, ears up, calmly watching everything that moves with one blue eye and one brown.',
+      'Faina was born around 2013–2014. For the first seven or eight years of her life she had a family — until her owners abandoned her and left her on the streets.',
+      'She didn’t give up. Faina made it to SledDogPack, and from there she found her person and came home to HuskyHub.',
+      'Today she’s a senior of around 13–14 who never got the memo about slowing down: independent, playful and sporty, with a white-silver coat, one ice-blue eye and one brown. She’ll do almost anything for meat — and, a little unexpectedly, for cucumbers.',
+      'Her round name tag spells her name in two alphabets — Φαεινή / ФАИНА. In Greek it means “shining”, which suits a white-silver dog who lights up a grey park.',
     ],
     timeline: [
-      { when: 'Mar 2023', title: 'Born', text: 'A snow-white puppy with mismatched eyes.' }, // TODO: confirm
-      { when: 'Jan 2024', title: 'Joined HuskyHub', text: 'Became the pack’s shining one.' }, // TODO: confirm
-      { when: 'Spring', title: 'Park bench portrait', text: 'Her first official HuskyHub photo — snood on, ears up.' },
+      { when: '2013–14', title: 'Born', text: 'Around 2013–2014.' },
+      { when: 'Age 7–8', title: 'Left on the streets', text: 'Her owners abandoned her.' },
+      { when: 'Rescue', title: 'SledDogPack', text: 'She made it to SledDogPack.' },
+      { when: 'Then', title: 'Home', text: 'Found her person and came home to HuskyHub.' },
+      { when: 'Today', title: 'Still sporty at 13–14', text: 'Independent, playful and always up for sport.' },
     ],
     habits: [
-      'Sits upright on park benches like she owns them.',
-      'Watches the world go by with calm, serious focus.',
-      'Wears her ornament snood on every chilly walk.',
-      'Turns her head to show off her best (blue-eyed) side.',
+      'Does things her own way — independent to the core.',
+      'Still plays like a youngster at around 13–14.',
+      'Always up for sport and an active walk.',
+      'Will do almost anything for meat — or a cucumber.',
+      'Wears her ornament snood on chilly walks.',
     ],
     favorites: {
-      food: 'Salmon treats', // TODO: confirm
-      toy: 'A soft rope toy', // TODO: confirm
-      place: 'Park benches with a view',
-      activity: 'Long park walks',
+      food: 'Meat — and cucumbers',
+      activity: 'Sport & active walks',
     },
-    health: { vaccinated: true, neutered: true, microchipped: true, notes: 'Healthy.' }, // TODO: confirm
     facts: [
-      'Her name means “shining” in Greek (φαεινή)',
-      'Her tag is bilingual: Greek and Cyrillic',
-      'One blue eye, one brown — heterochromia is common in huskies',
+      'Her name means “shining” in Greek (φαεινή); her tag spells it in Greek and Cyrillic',
+      'Her favourite snacks: meat and cucumbers',
+      'Still sporty and playful at around 13–14',
+      'One ice-blue eye, one brown',
     ],
     friends: [],
     model: null,
     photos: [
-      { src: 'photos/faina/01.jpg', caption: 'Park bench portrait in her favourite snood', focus: '50% 0%' },
+      { src: 'photos/faina/01.jpg', caption: 'Park bench portrait in her snood', focus: '50% 0%' },
       { caption: 'Illustration · Faina under the northern lights', scene: 'aurora', mood: 'calm', tilt: -4 },
       { caption: 'Illustration · First snow of the season', scene: 'snow', mood: 'happy', tilt: 6 },
       { caption: 'Illustration · Evening song under the moon', scene: 'moon', mood: 'howl', tilt: -14 },

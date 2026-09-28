@@ -29,6 +29,12 @@ export function formatAge(birthDate, { short = false } = {}) {
   return months ? `${plural(years, 'year')}, ${months} mo` : plural(years, 'year');
 }
 
+/** A dog's age: exact from `birthDate`, or `~13–14 years` when only `ageApprox` is known. */
+export function dogAge(dog, { short = false } = {}) {
+  if (dog.ageApprox) return `~${dog.ageApprox} ${short ? 'yrs' : 'years'}`;
+  return formatAge(dog.birthDate, { short });
+}
+
 export function formatDate(iso) {
   return parseDate(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }

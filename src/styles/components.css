@@ -711,7 +711,15 @@ kbd {
   gap: 10px;
 }
 
+.dog-card__foot .chip {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .dog-card__cta {
+  flex: none;
   display: inline-flex;
   align-items: center;
   gap: 0.35em;

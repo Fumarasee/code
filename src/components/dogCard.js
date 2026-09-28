@@ -1,6 +1,6 @@
 import { dogPhoto, focusStyle } from '../lib/placeholders.js';
 import { icon } from '../lib/icons.js';
-import { escapeHtml, formatAge, prefersReducedMotion } from '../lib/utils.js';
+import { dogAge, escapeHtml, prefersReducedMotion } from '../lib/utils.js';
 
 export const genderIcon = (gender) =>
   `<span class="gender gender--${gender}" title="${gender === 'male' ? 'Boy' : 'Girl'}">${icon(gender)}</span>`;
@@ -43,8 +43,8 @@ export function dogCard(dog, i = 0) {
       </div>
       <p class="dog-card__tagline">${escapeHtml(dog.tagline)}</p>
       <dl class="dog-card__specs">
-        <div><dt>Age</dt><dd>${formatAge(dog.birthDate, { short: true })}</dd></div>
-        <div><dt>Weight</dt><dd>${dog.weight} kg</dd></div>
+        <div${dog.weight ? '' : ' class="is-wide"'}><dt>Age</dt><dd>${dogAge(dog, { short: true })}</dd></div>
+        ${dog.weight ? `<div><dt>Weight</dt><dd>${dog.weight} kg</dd></div>` : ''}
         <div class="is-wide"><dt>Coat</dt><dd>${coatSwatch(dog)}${escapeHtml(dog.coat.color)}</dd></div>
         <div class="is-wide"><dt>Eyes</dt><dd>${eyeSwatch(dog)}${escapeHtml(shortEyes(dog))}</dd></div>
       </dl>
