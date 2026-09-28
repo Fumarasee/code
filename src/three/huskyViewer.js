@@ -281,7 +281,7 @@ export function createHuskyViewer(container, dog, { onStatus = () => {} } = {}) 
 
   // Ground: snowy disc fading at the edges + glowing rings
   const groundMat = new THREE.MeshStandardMaterial({
-    color: '#dfe9f5',
+    color: '#6f82a3', // moonlit snow — stays readable under the key light
     roughness: 1,
     transparent: true,
     alphaMap: radialTexture('#ffffff', '#000000'),
@@ -428,6 +428,7 @@ export function createHuskyViewer(container, dog, { onStatus = () => {} } = {}) 
   const clock = new THREE.Clock();
   const tmp = new THREE.Vector3();
   const headWorld = new THREE.Vector3();
+  const headQuat = new THREE.Quaternion();
   let headYaw = 0;
   let headPitch = 0;
   let nextTwitch = 2;
@@ -458,11 +459,15 @@ export function createHuskyViewer(container, dog, { onStatus = () => {} } = {}) 
           husky.tongue.visible = k > 0.2;
         } else if (action.name === 'howl') {
           howl = k;
+          husky.head.getWorldQuaternion(headQuat);
           waves.forEach((w, i) => {
-            const p = (u * 2.2 + i / waves.length) % 1;
-            w.visible = u > 0.12 && u < 0.9;
-            w.scale.setScalar(0.6 + p * 3.2);
-            w.material.opacity = (1 - p) * 0.8 * k;
+            // Rings travel out of the muzzle, growing and fading
+            const p = (u * 2.4 + i / waves.length) % 1;
+            w.visible = husky.root.visible && u > 0.15 && u < 0.88;
+            w.position.copy(husky.head.localToWorld(tmp.set(0, -0.05, 0.55 + p * 0.9)));
+            w.quaternion.copy(headQuat);
+            w.scale.setScalar(0.35 + p * 1.3);
+            w.material.opacity = (1 - p) * 0.9 * k;
           });
         }
       }
@@ -515,20 +520,11 @@ export function createHuskyViewer(container, dog, { onStatus = () => {} } = {}) 
       custom.root.rotation.x = -0.25 * howl;
     }
 
-    // Place howl waves at the head
-    if (howl > 0) {
-      husky.head.getWorldPosition(headWorld);
-      waves.forEach((w) => {
-        w.position.copy(headWorld).add(tmp.set(0, 0.35, 0.25));
-        w.rotation.x = -0.9;
-      });
-    }
-
     // Environment
     rimA.position.set(Math.cos(t * 0.3) * 2.6, 2.3, Math.sin(t * 0.3) * 2.6);
     rimB.position.set(Math.cos(t * 0.3 + Math.PI) * 2.6, 1.6, Math.sin(t * 0.3 + Math.PI) * 2.6);
-    rimA.intensity = 16 + howl * 20;
-    rimB.intensity = 16 + howl * 20;
+    rimA.intensity = 16 + howl * 6;
+    rimB.intensity = 16 + howl * 6;
     aurora.material.uniforms.uTime.value = t;
     aurora.material.uniforms.uBoost.value = howl;
     ringA.material.opacity = 0.4 + Math.sin(t * 1.6) * 0.15;

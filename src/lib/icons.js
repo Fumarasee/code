@@ -10,7 +10,8 @@ const paths = {
     '<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
   male: '<circle cx="10" cy="14" r="6"/><path d="M14.5 9.5 21 3m-5 0h5v5"/>',
   female: '<circle cx="12" cy="9" r="6"/><path d="M12 15v7m-3-3h6"/>',
-  paw: '<circle cx="6.5" cy="10" r="2"/><circle cx="10" cy="5.5" r="2"/><circle cx="14" cy="5.5" r="2"/><circle cx="17.5" cy="10" r="2"/><path d="M12 11.5c-3 0-6 3.6-6 6.2 0 1.6 1.2 2.8 2.8 2.8 1.2 0 2-.6 3.2-.6s2 .6 3.2.6c1.6 0 2.8-1.2 2.8-2.8 0-2.6-3-6.2-6-6.2z"/>',
+  // Filled glyph: a stroked paw turns to mush at small sizes
+  paw: '<g fill="currentColor" stroke="none"><ellipse cx="5.2" cy="10.4" rx="2.1" ry="2.6" transform="rotate(-20 5.2 10.4)"/><ellipse cx="9.3" cy="5.6" rx="2.2" ry="2.8" transform="rotate(-8 9.3 5.6)"/><ellipse cx="14.7" cy="5.6" rx="2.2" ry="2.8" transform="rotate(8 14.7 5.6)"/><ellipse cx="18.8" cy="10.4" rx="2.1" ry="2.6" transform="rotate(20 18.8 10.4)"/><path d="M12 11.2c-2.9 0-6.2 4-6.2 6.6 0 1.7 1.3 2.9 3 2.9 1.3 0 2.1-.7 3.2-.7s1.9.7 3.2.7c1.7 0 3-1.2 3-2.9 0-2.6-3.3-6.6-6.2-6.6z"/></g>',
   sparkles:
     '<path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
   shuffle: '<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',

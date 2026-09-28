@@ -151,8 +151,8 @@ p {
   opacity: 0;
 }
 .reveal.is-visible {
-  animation: reveal-in 0.9s var(--ease-out) both;
-  animation-delay: calc(var(--i, 0) * 80ms);
+  animation: reveal-in 0.8s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
 }
 
 @keyframes reveal-in {
