@@ -75,6 +75,50 @@ model: 'models/loki.stl',
 modelOptions: { rotationY: 90, up: 'z', color: '#8a8f99', smooth: true },
 ```
 
+## React components
+
+The site is plain JavaScript, but React components can be used anywhere as **islands**. An island is a React
+component mounted into one element of a page. React only downloads on pages that actually mount one; the rest of the
+site stays as light as before.
+
+1. Put the component in `src/react/components/`, e.g. `src/react/components/PawCounter.jsx`. It can import its own
+   CSS file as usual.
+
+   ```jsx
+   import { useState } from 'react';
+   import './PawCounter.css';
+
+   export default function PawCounter({ label = 'paws' }) {
+     const [count, setCount] = useState(0);
+     return <button className="btn" onClick={() => setCount(count + 1)}>{count} {label}</button>;
+   }
+   ```
+
+2. Mount it from a page with `mountIsland(element, loader, props)`, and unmount it in the page's cleanup function:
+
+   ```js
+   import { mountIsland } from '../react/island.js';
+
+   export function renderDog(app, route) {
+     // …
+     const island = mountIsland(app.querySelector('#paw-counter'), () => import('../react/components/PawCounter.jsx'), {
+       label: 'paws',
+     });
+
+     return () => {
+       island.unmount();
+       // …existing cleanup
+     };
+   }
+   ```
+
+   `island.update({ label: 'boops' })` re-renders with new props and keeps the component's state. `island.ready` is a
+   promise that resolves after the first render.
+
+Components copied from libraries such as ReactBits work the same way. Install the packages they import first, e.g.
+`npm install ogl` or `npm install gsap`. Use `.jsx` files; `.tsx` works too. In development, edits to a component
+hot-reload without losing its state.
+
 ## Design
 
 The interface follows Apple's fluid-interface principles, from the WWDC talk *Designing Fluid Interfaces*, adapted
@@ -128,6 +172,8 @@ src/data/dogs.js        the pack — all dog content
 src/pages/              home, dog profile, 404
 src/components/         header/footer, dog card, gallery overlay, aurora background
 src/three/huskyViewer.js  three.js 3D viewer
+src/react/island.js     mountIsland() — use React components inside the site
+src/react/components/   your React components (.jsx)
 src/lib/                helpers: generated portraits, icons, colors, utils
 src/styles/             tokens, base, aurora, components, home, profile, gallery
 ```
