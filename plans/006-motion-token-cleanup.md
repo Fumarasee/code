@@ -1,6 +1,6 @@
 # 006 — Fold the stray hand-typed motion values into the motion system
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: d494e09
 - **Severity**: LOW
 - **Category**: Cohesion & tokens

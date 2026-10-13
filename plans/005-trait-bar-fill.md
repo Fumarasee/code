@@ -1,6 +1,6 @@
 # 005 — Temperament bars: fill with a clip reveal instead of scaleX
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: d494e09
 - **Severity**: LOW
 - **Category**: Physicality & origin

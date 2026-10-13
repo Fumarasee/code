@@ -1,6 +1,6 @@
 # 001 — Make the search popover interruptible and exit with ease-out
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: d494e09
 - **Severity**: HIGH
 - **Category**: Easing & duration; Interruptibility

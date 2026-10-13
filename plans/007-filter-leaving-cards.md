@@ -1,6 +1,6 @@
 # 007 — Filtering: cards that drop out fade away instead of vanishing
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: d494e09
 - **Severity**: LOW (missed opportunity)
 - **Category**: Missed opportunities

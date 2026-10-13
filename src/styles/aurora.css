@@ -35,7 +35,7 @@
   width: 106%;
   height: 106%;
   translate: calc(var(--px) * -28px) calc(var(--py) * -16px);
-  transition: translate 1.4s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: translate 1.4s var(--spring);
 }
 
 /* No WebGL: a still, soft glow where the aurora would be */

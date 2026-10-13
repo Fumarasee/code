@@ -19,15 +19,15 @@ The plans are small corrections and three additive touches.
 
 | # | Plan | Severity | Category | Status |
 | --- | --- | --- | --- | --- |
-| 001 | [Search popover: interruptible transitions, ease-out exit](001-search-popover-transitions.md) | HIGH | Easing; Interruptibility | TODO |
-| 002 | [Programmatic scrolls respect reduced motion; `/` jumps](002-smooth-scroll-reduced-motion.md) | MEDIUM | Accessibility; Frequency | TODO |
-| 003 | [Route crossfade: ease-out + 2px blur mask](003-route-crossfade.md) | LOW | Easing; Cohesion | TODO |
-| 004 | [Gate hover motion to real hover devices](004-gate-hover-motion.md) | LOW | Accessibility | TODO |
-| 005 | [Temperament bars: clip reveal instead of scaleX](005-trait-bar-fill.md) | LOW | Physicality | TODO |
-| 006 | [Fold stray motion values into tokens](006-motion-token-cleanup.md) | LOW | Cohesion & tokens | TODO |
-| 007 | [Filtering: leaving cards fade out in place](007-filter-leaving-cards.md) | LOW | Missed opportunity | TODO |
-| 008 | [Empty state eases in](008-empty-state-entrance.md) | LOW | Missed opportunity | TODO |
-| 009 | [Gallery: crossfade ambient glow, fade in caption](009-gallery-caption-ambient-crossfade.md) | LOW | Missed opportunity | TODO |
+| 001 | [Search popover: interruptible transitions, ease-out exit](001-search-popover-transitions.md) | HIGH | Easing; Interruptibility | DONE |
+| 002 | [Programmatic scrolls respect reduced motion; `/` jumps](002-smooth-scroll-reduced-motion.md) | MEDIUM | Accessibility; Frequency | DONE |
+| 003 | [Route crossfade: ease-out + 2px blur mask](003-route-crossfade.md) | LOW | Easing; Cohesion | DONE |
+| 004 | [Gate hover motion to real hover devices](004-gate-hover-motion.md) | LOW | Accessibility | DONE |
+| 005 | [Temperament bars: clip reveal instead of scaleX](005-trait-bar-fill.md) | LOW | Physicality | DONE |
+| 006 | [Fold stray motion values into tokens](006-motion-token-cleanup.md) | LOW | Cohesion & tokens | DONE |
+| 007 | [Filtering: leaving cards fade out in place](007-filter-leaving-cards.md) | LOW | Missed opportunity | DONE |
+| 008 | [Empty state eases in](008-empty-state-entrance.md) | LOW | Missed opportunity | DONE |
+| 009 | [Gallery: crossfade ambient glow, fade in caption](009-gallery-caption-ambient-crossfade.md) | LOW | Missed opportunity | DONE |
 
 ## Recommended execution order
 

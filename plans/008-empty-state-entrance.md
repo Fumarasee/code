@@ -1,6 +1,6 @@
 # 008 — Empty state: ease in instead of popping into place
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: d494e09
 - **Severity**: LOW (missed opportunity)
 - **Category**: Missed opportunities

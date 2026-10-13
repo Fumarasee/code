@@ -503,6 +503,7 @@ kbd {
 /* ------------------------------------------------------------- dog card -- */
 
 .dog-grid {
+  position: relative; /* anchors cards that are fading out (filtering) */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16.75rem, 1fr));
   gap: 1.5rem;
@@ -532,6 +533,13 @@ kbd {
 }
 
 .dog-card--static {
+  animation: none;
+}
+
+/* A card that just dropped out of the grid: pinned where it stood while it fades away */
+.dog-card--ghost {
+  position: absolute;
+  pointer-events: none;
   animation: none;
 }
 
@@ -590,8 +598,10 @@ kbd {
   pointer-events: none;
 }
 
-.dog-card:hover .dog-card__glow {
-  opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+  .dog-card:hover .dog-card__glow {
+    opacity: 1;
+  }
 }
 
 .dog-card__media {
@@ -612,8 +622,10 @@ kbd {
   transition: scale var(--spring-duration) var(--spring);
 }
 
-.dog-card:hover .dog-card__media img {
-  scale: 1.05;
+@media (hover: hover) and (pointer: fine) {
+  .dog-card:hover .dog-card__media img {
+    scale: 1.05;
+  }
 }
 
 .dog-card__media::after {
@@ -778,8 +790,10 @@ kbd {
   transition: translate var(--spring-duration) var(--spring);
 }
 
-.dog-card:hover .dog-card__cta .icon {
-  translate: 0.25rem 0;
+@media (hover: hover) and (pointer: fine) {
+  .dog-card:hover .dog-card__cta .icon {
+    translate: 0.25rem 0;
+  }
 }
 
 /* --------------------------------------------------------- empty state -- */
@@ -791,6 +805,17 @@ kbd {
   padding: 3.5rem 1.5rem;
   border-radius: var(--radius-l);
   text-align: center;
+  transition:
+    opacity 200ms var(--ease-out),
+    translate var(--spring-duration) var(--spring);
+}
+
+/* Each time it appears (display: none → shown) it eases in from just below */
+@starting-style {
+  .empty {
+    opacity: 0;
+    translate: 0 0.75rem;
+  }
 }
 
 .empty[hidden] {

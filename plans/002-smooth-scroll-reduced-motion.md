@@ -1,6 +1,6 @@
 # 002 — Programmatic scrolls: respect reduced motion; the `/` shortcut jumps instantly
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: d494e09
 - **Severity**: MEDIUM
 - **Category**: Accessibility; Purpose & frequency

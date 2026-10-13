@@ -1,6 +1,6 @@
 # 004 — Gate hover motion to devices that really hover
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: d494e09
 - **Severity**: LOW
 - **Category**: Accessibility

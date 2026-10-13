@@ -1,6 +1,7 @@
 import { icon } from '../lib/icons.js';
 import { dogs } from '../data/dogs.js';
 import { uiState } from '../lib/state.js';
+import { prefersReducedMotion } from '../lib/utils.js';
 
 // Official HuskyHub logo, light-lettered version for the dark theme
 // (original colours: public/brand/huskyhub-logo.webp)
@@ -45,11 +46,14 @@ export function renderHeader(el) {
   onScroll();
 }
 
-/** Focuses the home search bar, navigating home first if needed. */
-export function focusSearch() {
+/**
+ * Focuses the home search bar, navigating home first if needed.
+ * A click glides there; keyboard shortcuts (`instant`) and reduced motion jump.
+ */
+export function focusSearch({ instant = false } = {}) {
   const input = document.getElementById('dog-search');
   if (input) {
-    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    input.scrollIntoView({ behavior: instant || prefersReducedMotion() ? 'auto' : 'smooth', block: 'center' });
     input.focus({ preventScroll: true });
     return;
   }

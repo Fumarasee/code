@@ -3,7 +3,7 @@ import { openGallery } from '../components/gallery.js';
 import { genderIcon, coatSwatch, eyeSwatch, statusClass } from '../components/dogCard.js';
 import { dogPhoto, dogPhotos, focusStyle } from '../lib/placeholders.js';
 import { icon } from '../lib/icons.js';
-import { $, dogAge, escapeHtml, formatDate } from '../lib/utils.js';
+import { $, dogAge, escapeHtml, formatDate, prefersReducedMotion } from '../lib/utils.js';
 import { renderNotFound } from './notFound.js';
 
 const e = escapeHtml;
@@ -359,7 +359,9 @@ export function renderDog(app, { id }) {
     const s = ev.target.closest('[data-scroll]');
     if (s) {
       ev.preventDefault();
-      document.getElementById(s.dataset.scroll)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document
+        .getElementById(s.dataset.scroll)
+        ?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
     }
   };
   root.addEventListener('click', onClick);

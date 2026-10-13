@@ -1,6 +1,6 @@
 # 003 — Route crossfade: strong ease-out and a 2px blur mask
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: d494e09
 - **Severity**: LOW
 - **Category**: Easing & duration; Cohesion

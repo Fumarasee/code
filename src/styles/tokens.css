@@ -58,6 +58,8 @@
    */
   --spring: cubic-bezier(0.25, 1, 0.5, 1);
   --spring-duration: 0.5s;
+  /* Strong ease-out for things entering or leaving on a fixed duration (fades, exits) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --press: 100ms ease-out; /* feedback on pointer-down is instant */
   --fade: 180ms ease;
 

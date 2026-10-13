@@ -1,6 +1,6 @@
 # 009 — Gallery: crossfade the ambient glow and fade in the caption on photo change
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: d494e09
 - **Severity**: LOW (missed opportunity)
 - **Category**: Missed opportunities
@@ -64,7 +64,7 @@ on a spring. At the same moment, two things around it **teleport**:
 When, and only when, the photo actually changes:
 
 - **Ambient glow**: crossfades over **250ms** with `cubic-bezier(0.23, 1, 0.32, 1)`. A shallow clone of the
-  ambient layer keeps the old image and fades to 0 on top of it, then is removed. The real layer gets the new
+  ambient layer keeps the old image underneath and fades to 0, then is removed. The real layer gets the new
   image and fades in from 0 to its CSS opacity.
 - **Caption**: the new text fades in from 0 over **150ms** with the same curve. There's no exit fade: the old
   text disappears instantly, which avoids two captions overlapping.
@@ -85,7 +85,7 @@ const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)'; // same curve as --ease-out i
     counter.textContent = `Photo ${index + 1} of ${photos.length}`;
     if (animate) {
       // The surroundings follow the photo instead of swapping on one frame:
-      // the old glow fades out over the new one, the new caption fades in
+      // the new glow fades in over the old one (fading away beneath it), the new caption fades in
       const previous = ambient.cloneNode();
       ambient.before(previous);
       const fadeOut = previous.animate([{ opacity: 0 }], { duration: 250, easing: EASE_OUT });
