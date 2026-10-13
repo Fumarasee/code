@@ -26,6 +26,7 @@ export function closeGallery(opts) {
 }
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)'; // same curve as --ease-out in tokens.css
 
 export function openGallery(dog, startIndex = 0, { showProfileLink = true, origin = null } = {}) {
   if (active) active.close({ instant: true });
@@ -186,10 +187,20 @@ export function openGallery(dog, startIndex = 0, { showProfileLink = true, origi
 
   /* --- navigation -------------------------------------------------------- */
 
-  function updateUI() {
+  function updateUI({ animate = false } = {}) {
     const photo = photos[index];
     caption.textContent = photo.caption;
     counter.textContent = `Photo ${index + 1} of ${photos.length}`;
+    if (animate) {
+      // The surroundings follow the photo instead of swapping on one frame:
+      // the new glow fades in over the old one (fading away beneath it), the new caption fades in
+      const previous = ambient.cloneNode();
+      ambient.before(previous);
+      const fadeOut = previous.animate([{ opacity: 0 }], { duration: 250, easing: EASE_OUT });
+      fadeOut.onfinish = fadeOut.oncancel = () => previous.remove();
+      ambient.animate([{ opacity: 0, offset: 0 }], { duration: 250, easing: EASE_OUT });
+      caption.animate([{ opacity: 0, offset: 0 }], { duration: 150, easing: EASE_OUT });
+    }
     ambient.style.backgroundImage = `url("${photo.src}")`;
     prevBtn.disabled = index === 0;
     nextBtn.disabled = index === last;
@@ -213,7 +224,7 @@ export function openGallery(dog, startIndex = 0, { showProfileLink = true, origi
     } else {
       trackX.to(-index * width, { damping: flick ? 0.85 : 1, response: flick ? 0.34 : 0.38, velocity });
     }
-    updateUI();
+    updateUI({ animate: changed });
     return changed;
   }
 

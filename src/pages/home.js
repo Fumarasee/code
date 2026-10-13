@@ -231,8 +231,14 @@ export function renderHome(app, { fromDogId = null } = {}) {
     if (ids === renderedIds) return;
 
     const before = new Map();
+    const leaving = [];
     if (renderedIds && !reduced) {
-      $$('.dog-card', grid).forEach((c) => before.set(c.dataset.id, c.getBoundingClientRect()));
+      const next = new Set(list.map((d) => d.id));
+      $$('.dog-card:not(.dog-card--ghost)', grid).forEach((c) => {
+        const rect = c.getBoundingClientRect();
+        before.set(c.dataset.id, rect);
+        if (!next.has(c.dataset.id)) leaving.push({ card: c, rect });
+      });
     }
     renderedIds = ids;
     grid.innerHTML = list.map((d, i) => dogCard(d, i)).join('');
@@ -257,6 +263,29 @@ export function renderHome(app, { fromDogId = null } = {}) {
         });
       }
     });
+
+    // Cards that dropped out fade away where they stood instead of vanishing
+    const origin = grid.getBoundingClientRect();
+    leaving.forEach(({ card, rect }) => {
+      card.getAnimations().forEach((a) => a.cancel()); // e.g. a reflow still in flight
+      card.classList.add('dog-card--ghost');
+      card.inert = true;
+      card.setAttribute('aria-hidden', 'true');
+      Object.assign(card.style, {
+        left: `${rect.left - origin.left}px`,
+        top: `${rect.top - origin.top}px`,
+        width: `${rect.width}px`,
+        height: `${rect.height}px`,
+        transform: '',
+        willChange: '',
+      });
+      grid.prepend(card); // painted under the cards gliding over its spot
+      card.animate([{ opacity: 1, scale: 1 }, { opacity: 0, scale: 0.96 }], {
+        duration: 150,
+        easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+        fill: 'forwards',
+      }).onfinish = () => card.remove();
+    });
   }
 
   update();
@@ -275,6 +304,19 @@ export function renderHome(app, { fromDogId = null } = {}) {
   /* --- search + suggestions --- */
   let activeIndex = -1;
   let suggestions = [];
+  let leaveTimer = 0;
+
+  /** Ends the exit: the popover is only really hidden once it has faded out. */
+  function finishLeaving() {
+    clearTimeout(leaveTimer);
+    if (!suggestionsEl.classList.contains('is-leaving')) return;
+    suggestionsEl.classList.remove('is-leaving');
+    suggestionsEl.hidden = true;
+  }
+  // Children's transitions bubble up here too — only the popover's own fade counts
+  suggestionsEl.addEventListener('transitionend', (e) => {
+    if (e.target === suggestionsEl && e.propertyName === 'opacity') finishLeaving();
+  });
 
   /** The popover returns into the field it came from (same path out as in). */
   function hideSuggestions() {
@@ -287,15 +329,9 @@ export function renderHome(app, { fromDogId = null } = {}) {
       return;
     }
     suggestionsEl.classList.add('is-leaving');
-    suggestionsEl.addEventListener(
-      'animationend',
-      () => {
-        if (!suggestionsEl.classList.contains('is-leaving')) return;
-        suggestionsEl.classList.remove('is-leaving');
-        suggestionsEl.hidden = true;
-      },
-      { once: true },
-    );
+    // Safety net: no transitionend fires if it was already transparent
+    clearTimeout(leaveTimer);
+    leaveTimer = setTimeout(finishLeaving, 250);
   }
 
   function renderSuggestions() {
@@ -321,6 +357,7 @@ export function renderHome(app, { fromDogId = null } = {}) {
           )
           .join('')
       : `<li class="search__none">No husky answers to “${escapeHtml(q)}”… yet.</li>`;
+    clearTimeout(leaveTimer);
     suggestionsEl.classList.remove('is-leaving');
     suggestionsEl.hidden = false;
     input.setAttribute('aria-expanded', 'true');

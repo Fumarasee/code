@@ -150,10 +150,41 @@ html.is-scrolled .scroll-edge {
  * leaving and returning along the same path.
  */
 
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.28s;
-  animation-timing-function: ease;
+  /*
+   * Our own fade replaces the browser's, so keep its additive blend: with the
+   * same curve on both, the two pages always add up to full opacity and the
+   * background never dims mid-fade.
+   */
+  mix-blend-mode: plus-lighter;
+}
+
+/* A 2px blur masks the moment both pages show at once */
+::view-transition-old(root) {
+  animation: vt-fade-out 0.28s var(--ease-out) both;
+}
+
+::view-transition-new(root) {
+  animation: vt-fade-in 0.28s var(--ease-out) both;
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
 }
 
 ::view-transition-group(dog-hero) {
@@ -216,14 +247,6 @@ html.is-scrolled .scroll-edge {
     opacity: 0;
     transform: scale(0.96);
     filter: blur(6px);
-  }
-}
-
-@keyframes materialize-out {
-  to {
-    opacity: 0;
-    transform: scale(0.97);
-    filter: blur(4px);
   }
 }
 

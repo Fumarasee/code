@@ -89,7 +89,7 @@ document.addEventListener('keydown', (e) => {
   const t = e.target;
   if (t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
   e.preventDefault();
-  focusSearch();
+  focusSearch({ instant: true }); // keyboard shortcuts never animate
 });
 
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
